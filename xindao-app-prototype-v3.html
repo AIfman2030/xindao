@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>心岛 - 释放你的焦虑与孤独</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #fef6f0 0%, #fdf2eb 50%, #f8e8dc 100%);
+      min-height: 100vh;
+      padding: 30px 15px;
+    }
+
+    h1 {
+      text-align: center;
+      font-family: 'Noto Serif SC', serif;
+      font-size: 28px;
+      color: #5a4a42;
+      margin-bottom: 8px;
+      letter-spacing: 0.15em;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #8b7355;
+      font-size: 14px;
+      margin-bottom: 35px;
+      font-weight: 300;
+    }
+
+    .phones-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 35px;
+      justify-content: center;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    .phone-label {
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 13px;
+      color: #8b7355;
+      font-style: italic;
+    }
+
+    .phone-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* iPhone Frame */
+    .iphone {
+      width: 393px;
+      height: 852px;
+      background: #000;
+      border-radius: 60px;
+      padding: 12px;
+      box-shadow: 0 0 0 2px #1f2937, 0 20px 60px rgba(0,0,0,0.25);
+      position: relative;
+    }
+
+    .iphone-screen {
+      width: 100%;
+      height: 100%;
+      border-radius: 48px;
+      overflow: hidden;
+      background: #fff;
+      position: relative;
+    }
+
+    .status-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: -apple-system, sans-serif;
+      z-index: 10;
+    }
+
+    .dynamic-island {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 124px;
+      height: 36px;
+      background: #000;
+      border-radius: 999px;
+      z-index: 20;
+    }
+
+    .home-indicator {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 140px;
+      height: 5px;
+      background: rgba(0,0,0,0.25);
+      border-radius: 999px;
+      z-index: 10;
+    }
+
+    /* Screen: Voice Input */
+    .screen-voice {
+      height: 100%;
+      background: linear-gradient(180deg, #FFFBF8 0%, #FFF5EE 100%);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-header {
+      padding: 16px 20px;
+      background: #FFF;
+      border-bottom: 1px solid #F5EDE6;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .back-btn { cursor: pointer; }
+
+    .chat-header h2 {
+      font-size: 17px;
+      color: #5D4E45;
+      font-weight: 600;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+    }
+
+    .message {
+      display: flex;
+      margin-bottom: 16px;
+    }
+
+    .message.user {
+      justify-content: flex-end;
+    }
+
+    .message-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+      flex-shrink: 0;
+      font-size: 16px;
+    }
+
+    .message.user .message-avatar {
+      margin-right: 0;
+      margin-left: 10px;
+    }
+
+    .message-bubble-wrapper {
+      max-width: 78%;
+    }
+
+    .message.user .message-bubble-wrapper {
+      text-align: right;
+    }
+
+    .message-sender {
+      font-size: 12px;
+      color: #8B7B6B;
+      margin-bottom: 4px;
+    }
+
+    .message-bubble {
+      background: #FFF;
+      border-radius: 4px 16px 16px 16px;
+      padding: 12px 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .message.user .message-bubble {
+      background: linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);
+      color: #FFF;
+      border-radius: 16px 4px 16px 16px;
+    }
+
+    .message-text {
+      font-size: 15px;
+      color: #5D4E45;
+      line-height: 1.6;
+    }
+
+    .message.user .message-text {
+      color: #FFF;
+    }
+
+    .message-highlight {
+      color: #FF7E5F;
+      font-weight: 600;
+    }
+
+    .message.user .message-highlight {
+      color: #FFE4D6;
+    }
+
+    /* Voice Input Bar */
+    .voice-input-bar {
+      background: #FFF;
+      border-top: 1px solid #F5EDE6;
+      padding: 12px 16px 34px;
+    }
+
+    .voice-hint {
+      font-size: 12px;
+      color: #8B7B6B;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .input-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      background: #F8F4F0;
+      border-radius: 24px;
+      padding: 10px 16px;
+    }
+
+    .input-wrapper svg {
+      margin-right: 10px;
+      flex-shrink: 0;
+      color: #8B7B6B;
+    }
+
+    .input-wrapper input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-size: 15px;
+      color: #5D4E45;
+      outline: none;
+    }
+
+    .send-btn {
+      flex-shrink: 0;
+      cursor: pointer;
+      color: #FF9A76;
+    }
+
+    /* Voice Button */
+    .voice-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(255,126,95,0.35);
+      transition: all 0.2s;
+    }
+
+    .voice-btn:active {
+      transform: scale(0.95);
+    }
+
+    .voice-btn.recording {
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 4px 16px rgba(255,126,95,0.35); }
+      50% { box-shadow: 0 4px 30px rgba(255,126,95,0.6); }
+    }
+
+    /* Recording Wave */
+    .recording-wave {
+      display: none;
+      align-items: center;
+      gap: 4px;
+      padding: 12px 16px;
+      background: #FFF5EE;
+      border-radius: 20px;
+      margin-top: 10px;
+    }
+
+    .recording-wave.active {
+      display: flex;
+    }
+
+    .wave-bar {
+      width: 3px;
+      height: 20px;
+      background: #FF9A76;
+      border-radius: 2px;
+      animation: wave 0.5s ease-in-out infinite;
+    }
+
+    .wave-bar:nth-child(1) { animation-delay: 0s; }
+    .wave-bar:nth-child(2) { animation-delay: 0.1s; }
+    .wave-bar:nth-child(3) { animation-delay: 0.2s; }
+    .wave-bar:nth-child(4) { animation-delay: 0.3s; }
+    .wave-bar:nth-child(5) { animation-delay: 0.4s; }
+
+    @keyframes wave {
+      0%, 100% { height: 8px; }
+      50% { height: 24px; }
+    }
+
+    .recording-text {
+      font-size: 13px;
+      color: #FF7E5F;
+      margin-left: 8px;
+    }
+
+    .stop-btn {
+      margin-left: auto;
+      padding: 6px 14px;
+      background: #FF7E5F;
+      color: #FFF;
+      border: none;
+      border-radius: 14px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    /* Action Plan Screen */
+    .screen-plan {
+      height: 100%;
+      background: #FFF8F3;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .plan-header {
+      padding: 16px 20px;
+      background: #FFF;
+      border-bottom: 1px solid #F5EDE6;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .plan-header h2 {
+      font-size: 17px;
+      color: #5D4E45;
+      font-weight: 600;
+    }
+
+    .plan-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+    }
+
+    .plan-intro {
+      background: linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .plan-intro-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .plan-intro-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #FFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .plan-intro-title {
+      color: #FFF;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .plan-intro-text {
+      color: #FFF;
+      font-size: 14px;
+      line-height: 1.6;
+      opacity: 0.95;
+    }
+
+    .plan-section {
+      background: #FFF;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+
+    .plan-section-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .plan-section-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .plan-section-title {
+      font-size: 15px;
+      color: #5D4E45;
+      font-weight: 600;
+    }
+
+    .plan-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid #F5EDE6;
+    }
+
+    .plan-item:last-child {
+      border-bottom: none;
+    }
+
+    .plan-item-check {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid #FF9A76;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .plan-item-content {
+      flex: 1;
+    }
+
+    .plan-item-title {
+      font-size: 14px;
+      color: #5D4E45;
+      margin-bottom: 4px;
+    }
+
+    .plan-item-time {
+      font-size: 12px;
+      color: #8B7B6B;
+    }
+
+    .plan-item-duration {
+      font-size: 11px;
+      color: #B8A899;
+      background: #F8F4F0;
+      padding: 3px 8px;
+      border-radius: 8px;
+    }
+
+    /* Calendar Screen */
+    .screen-calendar {
+      height: 100%;
+      background: #FFF8F3;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .calendar-header {
+      padding: 16px 20px;
+      background: #FFF;
+      border-bottom: 1px solid #F5EDE6;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .calendar-header h2 {
+      font-size: 17px;
+      color: #5D4E45;
+      font-weight: 600;
+    }
+
+    .calendar-nav {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .calendar-nav svg {
+      cursor: pointer;
+      color: #8B7B6B;
+    }
+
+    .calendar-month {
+      font-size: 15px;
+      color: #5D4E45;
+      font-weight: 500;
+    }
+
+    .calendar-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+    }
+
+    .calendar-grid {
+      background: #FFF;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .calendar-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      margin-bottom: 12px;
+    }
+
+    .weekday {
+      text-align: center;
+      font-size: 12px;
+      color: #B8A899;
+      padding: 8px 0;
+    }
+
+    .calendar-days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+
+    .calendar-day {
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-size: 14px;
+      color: #5D4E45;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .calendar-day:hover {
+      background: #FFF5EE;
+    }
+
+    .calendar-day.today {
+      background: #FFF5EE;
+      font-weight: 600;
+    }
+
+    .calendar-day.has-event {
+      position: relative;
+    }
+
+    .calendar-day.has-event::after {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: #FF9A76;
+      border-radius: 50%;
+      position: absolute;
+      bottom: 4px;
+    }
+
+    .calendar-day.selected {
+      background: linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);
+      color: #FFF;
+    }
+
+    /* Event List */
+    .event-list {
+      background: #FFF;
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .event-list-header {
+      font-size: 15px;
+      color: #5D4E45;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+
+    .event-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid #F5EDE6;
+    }
+
+    .event-item:last-child {
+      border-bottom: none;
+    }
+
+    .event-time {
+      width: 50px;
+      text-align: center;
+    }
+
+    .event-time-hour {
+      font-size: 15px;
+      color: #5D4E45;
+      font-weight: 600;
+    }
+
+    .event-time-min {
+      font-size: 11px;
+      color: #B8A899;
+    }
+
+    .event-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #FF9A76;
+    }
+
+    .event-content {
+      flex: 1;
+    }
+
+    .event-title {
+      font-size: 14px;
+      color: #5D4E45;
+      margin-bottom: 2px;
+    }
+
+    .event-meta {
+      font-size: 12px;
+      color: #8B7B6B;
+    }
+
+    .event-reminder {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      color: #FF9A76;
+    }
+
+    /* Reminders Screen */
+    .screen-reminders {
+      height: 100%;
+      background: #FFF8F3;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .reminders-header {
+      padding: 16px 20px;
+      background: #FFF;
+      border-bottom: 1px solid #F5EDE6;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .reminders-header h2 {
+      font-size: 17px;
+      color: #5D4E45;
+      font-weight: 600;
+    }
+
+    .reminders-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+    }
+
+    .reminder-card {
+      background: #FFF;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+
+    .reminder-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .reminder-card-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .reminder-card-title span:first-child {
+      font-size: 18px;
+    }
+
+    .reminder-card-title span:last-child {
+      font-size: 14px;
+      color: #5D4E45;
+      font-weight: 500;
+    }
+
+    .reminder-toggle {
+      width: 48px;
+      height: 28px;
+      background: #FF9A76;
+      border-radius: 14px;
+      position: relative;
+      cursor: pointer;
+      border: none;
+    }
+
+    .reminder-toggle::after {
+      content: '';
+      width: 24px;
+      height: 24px;
+      background: #FFF;
+      border-radius: 50%;
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      transition: all 0.2s;
+    }
+
+    .reminder-toggle.off {
+      background: #E0D5CC;
+    }
+
+    .reminder-toggle.off::after {
+      right: 22px;
+    }
+
+    .reminder-card-body {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .reminder-time {
+      background: #FFF5EE;
+      padding: 8px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      color: #FF7E5F;
+      font-weight: 500;
+    }
+
+    .reminder-repeat {
+      font-size: 13px;
+      color: #8B7B6B;
+    }
+
+    .reminder-progress {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid #F5EDE6;
+    }
+
+    .progress-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .progress-label {
+      font-size: 13px;
+      color: #8B7B6B;
+    }
+
+    .progress-value {
+      font-size: 13px;
+      color: #5D4E45;
+      font-weight: 500;
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: #F5EDE6;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #FF9A76 0%, #FF7E5F 100%);
+      border-radius: 3px;
+      transition: width 0.3s;
+    }
+
+    /* Add Reminder FAB */
+    .add-reminder-fab {
+      position: absolute;
+      bottom: 100px;
+      right: 20px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(255,126,95,0.4);
+    }
+
+  </style>
+</head>
+<body>
+
+  <h1>心岛</h1>
+  <p class="subtitle">释放你的焦虑与孤独</p>
+
+  <div class="phones-container">
+
+    <!-- Screen 1: Voice Input -->
+    <div class="phone-wrapper">
+      <div class="phone-label">语音输入 · 解放双手</div>
+      <div class="iphone">
+        <div class="iphone-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <div style="display:flex;align-items:flex-end;gap:2px;height:12px;">
+                <div style="width:3px;height:4px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:6px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:9px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:11px;background:currentColor;border-radius:1px;"></div>
+              </div>
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none" style="color:#000">
+                <path d="M8 11.5a1 1 0 100-2 1 1 0 000 2z" fill="currentColor"/>
+                <path d="M3 7.5a7 7 0 0110 0" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+              </svg>
+              <div style="width:26px;height:12px;border:1.5px solid currentColor;border-radius:3px;padding:1px;position:relative;">
+                <div style="width:75%;height:100%;background:currentColor;border-radius:1px;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="dynamic-island"></div>
+
+          <div class="screen-voice">
+            <div class="chat-header">
+              <svg class="back-btn" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8B7B6B" stroke-width="2">
+                <path d="M15 18l-6-6 6-6"/>
+              </svg>
+              <h2>心岛群聊</h2>
+            </div>
+
+            <div class="chat-messages">
+              <div class="message user">
+                <div class="message-bubble-wrapper">
+                  <p class="message-sender">小明</p>
+                  <div class="message-bubble">
+                    <p class="message-text">最近工作压力很大，不知道怎么规划时间 😔</p>
+                  </div>
+                </div>
+                <div class="message-avatar" style="background:linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);margin-left:10px;margin-right:0;">👤</div>
+              </div>
+
+              <div class="message">
+                <div class="message-avatar" style="background:#FFE4D6;">🌊</div>
+                <div class="message-bubble-wrapper">
+                  <p class="message-sender" style="color:#CC7A5A;">@Naval</p>
+                  <div class="message-bubble">
+                    <p class="message-text">首先，<span class="message-highlight">焦虑是因为你在乎</span>。这是好事。</p>
+                    <p class="message-text" style="margin-top:8px;">时间管理的本质不是挤时间，而是<span class="message-highlight">选择做什么</span>。列出你真正在乎的3件事，其他的说"不"。</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="message">
+                <div class="message-avatar" style="background:#D6E8F0;">💼</div>
+                <div class="message-bubble-wrapper">
+                  <p class="message-sender" style="color:#6B8E9F;">@保罗·格雷厄姆</p>
+                  <div class="message-bubble">
+                    <p class="message-text">建议用<span class="message-highlight">"写下来"法</span>：每天早上花5分钟，把今天要做的3件事写下来。只写3件。</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="voice-input-bar">
+              <p class="voice-hint">🎤 点击语音按钮，说出你的问题</p>
+              <div class="input-row">
+                <div class="input-wrapper" style="flex:1;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/>
+                    <path d="M19 10v2a7 7 0 01-14 0v-2"/>
+                    <line x1="12" y1="19" x2="12" y2="23"/>
+                    <line x1="8" y1="23" x2="16" y2="23"/>
+                  </svg>
+                  <input type="text" placeholder="或输入文字...">
+                  <svg class="send-btn" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                  </svg>
+                </div>
+                <button class="voice-btn">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFF" stroke-width="2">
+                    <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/>
+                    <path d="M19 10v2a7 7 0 01-14 0v-2"/>
+                    <line x1="12" y1="19" x2="12" y2="23"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="recording-wave" style="display:flex;">
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <span class="recording-text">正在倾听...</span>
+                <button class="stop-btn">停止</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="home-indicator"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 2: Action Plan -->
+    <div class="phone-wrapper">
+      <div class="phone-label">行动指南 · 群主定制的执行计划</div>
+      <div class="iphone">
+        <div class="iphone-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <div style="display:flex;align-items:flex-end;gap:2px;height:12px;">
+                <div style="width:3px;height:4px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:6px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:9px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:11px;background:currentColor;border-radius:1px;"></div>
+              </div>
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none" style="color:#000">
+                <path d="M8 11.5a1 1 0 100-2 1 1 0 000 2z" fill="currentColor"/>
+                <path d="M3 7.5a7 7 0 0110 0" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+              </svg>
+              <div style="width:26px;height:12px;border:1.5px solid currentColor;border-radius:3px;padding:1px;position:relative;">
+                <div style="width:75%;height:100%;background:currentColor;border-radius:1px;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="dynamic-island"></div>
+
+          <div class="screen-plan">
+            <div class="plan-header">
+              <svg class="back-btn" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8B7B6B" stroke-width="2">
+                <path d="M15 18l-6-6 6-6"/>
+              </svg>
+              <h2>你的行动指南</h2>
+            </div>
+
+            <div class="plan-content">
+              <div class="plan-intro">
+                <div class="plan-intro-header">
+                  <div class="plan-intro-avatar">🏝️</div>
+                  <span class="plan-intro-title">群主专属定制</span>
+                </div>
+                <p class="plan-intro-text">基于你刚才的提问，我为你生成了这份可执行的行动计划。按日历完成，每天验收，坚持一周，你会发现改变 ✨</p>
+              </div>
+
+              <div class="plan-section">
+                <div class="plan-section-header">
+                  <div class="plan-section-icon" style="background:#FFF5EE;">📋</div>
+                  <span class="plan-section-title">今日任务（6月19日）</span>
+                </div>
+                <div class="plan-item">
+                  <div class="plan-item-check">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FF9A76" stroke-width="3">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                  </div>
+                  <div class="plan-item-content">
+                    <p class="plan-item-title">早上9点：列出本周最重要的3件事</p>
+                    <p class="plan-item-time">⏰ 5分钟 | 用纸笔，不要用手机</p>
+                  </div>
+                </div>
+                <div class="plan-item">
+                  <div class="plan-item-check"></div>
+                  <div class="plan-item-content">
+                    <p class="plan-item-title">上午10点：处理最紧急的2件事</p>
+                    <p class="plan-item-time">⏰ 90分钟 | 番茄工作法（25+5）</p>
+                  </div>
+                </div>
+                <div class="plan-item">
+                  <div class="plan-item-check"></div>
+                  <div class="plan-item-content">
+                    <p class="plan-item-title">下午3点：回顾上午的工作，记录心得</p>
+                    <p class="plan-item-time">⏰ 10分钟</p>
+                  </div>
+                </div>
+                <div class="plan-item">
+                  <div class="plan-item-check"></div>
+                  <div class="plan-item-content">
+                    <p class="plan-item-title">晚上8点：明日计划预览</p>
+                    <p class="plan-item-time">⏰ 5分钟 | 对照3件事原则</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="plan-section">
+                <div class="plan-section-header">
+                  <div class="plan-section-icon" style="background:#E8F5E9;">🎯</div>
+                  <span class="plan-section-title">本周目标（6月19-25日）</span>
+                </div>
+                <div class="plan-item">
+                  <div class="plan-item-check"></div>
+                  <div class="plan-item-content">
+                    <p class="plan-item-title">掌握"写下来"时间管理法</p>
+                    <p class="plan-item-duration">保罗·格雷厄姆法</p>
+                  </div>
+                </div>
+                <div class="plan-item">
+                  <div class="plan-item-check"></div>
+                  <div class="plan-item-content">
+                    <p class="plan-item-title">每天践行"3件事原则"</p>
+                    <p class="plan-item-time">📊 验收：周日总结完成度</p>
+                  </div>
+                </div>
+                <div class="plan-item">
+                  <div class="plan-item-check"></div>
+                  <div class="plan-item-content">
+                    <p class="plan-item-title">减少50%的"紧急但不重要"事务</p>
+                    <p class="plan-item-time">💡 Naval：分清欲望和必要</p>
+                  </div>
+                </div>
+              </div>
+
+              <div style="text-align:center;padding:16px 0;">
+                <button style="padding:14px 32px;background:linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);border:none;border-radius:25px;color:#FFF;font-size:15px;font-weight:600;cursor:pointer;box-shadow:0 4px 16px rgba(255,126,95,0.3);">
+                  📅 同步到日历 + 开启提醒
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="home-indicator"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 3: Calendar -->
+    <div class="phone-wrapper">
+      <div class="phone-label">日历 · 任务可视化</div>
+      <div class="iphone">
+        <div class="iphone-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <div style="display:flex;align-items:flex-end;gap:2px;height:12px;">
+                <div style="width:3px;height:4px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:6px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:9px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:11px;background:currentColor;border-radius:1px;"></div>
+              </div>
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none" style="color:#000">
+                <path d="M8 11.5a1 1 0 100-2 1 1 0 000 2z" fill="currentColor"/>
+                <path d="M3 7.5a7 7 0 0110 0" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+              </svg>
+              <div style="width:26px;height:12px;border:1.5px solid currentColor;border-radius:3px;padding:1px;position:relative;">
+                <div style="width:75%;height:100%;background:currentColor;border-radius:1px;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="dynamic-island"></div>
+
+          <div class="screen-calendar">
+            <div class="calendar-header">
+              <svg class="back-btn" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8B7B6B" stroke-width="2">
+                <path d="M15 18l-6-6 6-6"/>
+              </svg>
+              <h2>我的日历</h2>
+              <div class="calendar-nav">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M15 18l-6-6 6-6"/>
+                </svg>
+                <span class="calendar-month">2026年6月</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 18l6-6-6-6"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="calendar-content">
+              <div class="calendar-grid">
+                <div class="calendar-weekdays">
+                  <span class="weekday">日</span>
+                  <span class="weekday">一</span>
+                  <span class="weekday">二</span>
+                  <span class="weekday">三</span>
+                  <span class="weekday">四</span>
+                  <span class="weekday">五</span>
+                  <span class="weekday">六</span>
+                </div>
+                <div class="calendar-days">
+                  <div class="calendar-day"></div>
+                  <div class="calendar-day"></div>
+                  <div class="calendar-day">1</div>
+                  <div class="calendar-day">2</div>
+                  <div class="calendar-day has-event">3</div>
+                  <div class="calendar-day">4</div>
+                  <div class="calendar-day">5</div>
+                  <div class="calendar-day">6</div>
+                  <div class="calendar-day has-event">7</div>
+                  <div class="calendar-day">8</div>
+                  <div class="calendar-day">9</div>
+                  <div class="calendar-day has-event">10</div>
+                  <div class="calendar-day">11</div>
+                  <div class="calendar-day">12</div>
+                  <div class="calendar-day">13</div>
+                  <div class="calendar-day has-event">14</div>
+                  <div class="calendar-day">15</div>
+                  <div class="calendar-day">16</div>
+                  <div class="calendar-day has-event">17</div>
+                  <div class="calendar-day today selected">18</div>
+                  <div class="calendar-day has-event">19</div>
+                  <div class="calendar-day">20</div>
+                  <div class="calendar-day has-event">21</div>
+                  <div class="calendar-day">22</div>
+                  <div class="calendar-day">23</div>
+                  <div class="calendar-day has-event">24</div>
+                  <div class="calendar-day">25</div>
+                  <div class="calendar-day">26</div>
+                  <div class="calendar-day has-event">27</div>
+                  <div class="calendar-day">28</div>
+                  <div class="calendar-day">29</div>
+                  <div class="calendar-day has-event">30</div>
+                </div>
+              </div>
+
+              <div class="event-list">
+                <p class="event-list-header">📅 今日待办</p>
+                <div class="event-item">
+                  <div class="event-time">
+                    <p class="event-time-hour">09</p>
+                    <p class="event-time-min">:00</p>
+                  </div>
+                  <div class="event-dot"></div>
+                  <div class="event-content">
+                    <p class="event-title">列出本周3件最重要的事</p>
+                    <p class="event-meta">⏰ 5分钟 · 待开始</p>
+                  </div>
+                  <div class="event-reminder">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                      <path d="M13.73 21a2 2 0 01-3.46 0"/>
+                    </svg>
+                    提醒
+                  </div>
+                </div>
+                <div class="event-item">
+                  <div class="event-time">
+                    <p class="event-time-hour">10</p>
+                    <p class="event-time-min">:00</p>
+                  </div>
+                  <div class="event-dot" style="background:#6B8E9F;"></div>
+                  <div class="event-content">
+                    <p class="event-title">处理2件紧急工作</p>
+                    <p class="event-meta">⏰ 90分钟 · 进行中</p>
+                  </div>
+                </div>
+                <div class="event-item">
+                  <div class="event-time">
+                    <p class="event-time-hour">15</p>
+                    <p class="event-time-min">:00</p>
+                  </div>
+                  <div class="event-dot" style="background:#9B8AA8;"></div>
+                  <div class="event-content">
+                    <p class="event-title">下午工作回顾</p>
+                    <p class="event-meta">⏰ 10分钟 · 未开始</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="home-indicator"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 4: Reminders -->
+    <div class="phone-wrapper">
+      <div class="phone-label">定时提醒 · 贴心督促</div>
+      <div class="iphone">
+        <div class="iphone-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <div style="display:flex;align-items:flex-end;gap:2px;height:12px;">
+                <div style="width:3px;height:4px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:6px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:9px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:11px;background:currentColor;border-radius:1px;"></div>
+              </div>
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none" style="color:#000">
+                <path d="M8 11.5a1 1 0 100-2 1 1 0 000 2z" fill="currentColor"/>
+                <path d="M3 7.5a7 7 0 0110 0" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+              </svg>
+              <div style="width:26px;height:12px;border:1.5px solid currentColor;border-radius:3px;padding:1px;position:relative;">
+                <div style="width:75%;height:100%;background:currentColor;border-radius:1px;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="dynamic-island"></div>
+
+          <div class="screen-reminders">
+            <div class="reminders-header">
+              <svg class="back-btn" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8B7B6B" stroke-width="2">
+                <path d="M15 18l-6-6 6-6"/>
+              </svg>
+              <h2>我的提醒</h2>
+            </div>
+
+            <div class="reminders-content">
+              <div class="reminder-card">
+                <div class="reminder-card-header">
+                  <div class="reminder-card-title">
+                    <span>🌅</span>
+                    <span>晨间计划</span>
+                  </div>
+                  <button class="reminder-toggle"></button>
+                </div>
+                <div class="reminder-card-body">
+                  <span class="reminder-time">08:50</span>
+                  <span class="reminder-repeat">每天 · 提前10分钟</span>
+                </div>
+                <div class="reminder-progress">
+                  <div class="progress-header">
+                    <span class="progress-label">本周完成率</span>
+                    <span class="progress-value">5/7 天</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width:71%;"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="reminder-card">
+                <div class="reminder-card-header">
+                  <div class="reminder-card-title">
+                    <span>📝</span>
+                    <span>3件事原则</span>
+                  </div>
+                  <button class="reminder-toggle"></button>
+                </div>
+                <div class="reminder-card-body">
+                  <span class="reminder-time">09:00</span>
+                  <span class="reminder-repeat">工作日 · 每日</span>
+                </div>
+                <div class="reminder-progress">
+                  <div class="progress-header">
+                    <span class="progress-label">本周完成率</span>
+                    <span class="progress-value">3/5 天</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width:60%;"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="reminder-card">
+                <div class="reminder-card-header">
+                  <div class="reminder-card-title">
+                    <span>🌙</span>
+                    <span>晚间复盘</span>
+                  </div>
+                  <button class="reminder-toggle off"></button>
+                </div>
+                <div class="reminder-card-body">
+                  <span class="reminder-time">21:00</span>
+                  <span class="reminder-repeat">每天</span>
+                </div>
+                <div class="reminder-progress">
+                  <div class="progress-header">
+                    <span class="progress-label">本周完成率</span>
+                    <span class="progress-value">已关闭</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="reminder-card">
+                <div class="reminder-card-header">
+                  <div class="reminder-card-title">
+                    <span>💪</span>
+                    <span>习惯养成</span>
+                  </div>
+                  <button class="reminder-toggle"></button>
+                </div>
+                <div class="reminder-card-body">
+                  <span class="reminder-time">10:00</span>
+                  <span class="reminder-repeat">周一/三/五</span>
+                </div>
+                <div class="reminder-progress">
+                  <div class="progress-header">
+                    <span class="progress-label">本周完成率</span>
+                    <span class="progress-value">2/3 天</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width:66%;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button class="add-reminder-fab">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFF" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+            </button>
+          </div>
+
+          <div class="home-indicator"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

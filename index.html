@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>心岛 - 释放你的焦虑与孤独</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #fef6f0 0%, #fdf2eb 50%, #f8e8dc 100%);
+      min-height: 100vh;
+      padding: 30px 15px;
+    }
+
+    h1 {
+      text-align: center;
+      font-family: 'Noto Serif SC', serif;
+      font-size: 28px;
+      color: #5a4a42;
+      margin-bottom: 8px;
+      letter-spacing: 0.15em;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #8b7355;
+      font-size: 14px;
+      margin-bottom: 35px;
+      font-weight: 300;
+    }
+
+    .phones-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 35px;
+      justify-content: center;
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+
+    .phone-label {
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 13px;
+      color: #8b7355;
+      font-style: italic;
+    }
+
+    .phone-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* iPhone Frame */
+    .iphone {
+      width: 393px;
+      height: 852px;
+      background: #000;
+      border-radius: 60px;
+      padding: 12px;
+      box-shadow: 0 0 0 2px #1f2937, 0 20px 60px rgba(0,0,0,0.25);
+      position: relative;
+    }
+
+    .iphone-screen {
+      width: 100%;
+      height: 100%;
+      border-radius: 48px;
+      overflow: hidden;
+      background: #fff;
+      position: relative;
+    }
+
+    .status-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: -apple-system, sans-serif;
+      z-index: 10;
+    }
+
+    .dynamic-island {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 124px;
+      height: 36px;
+      background: #000;
+      border-radius: 999px;
+      z-index: 20;
+    }
+
+    .home-indicator {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 140px;
+      height: 5px;
+      background: rgba(0,0,0,0.25);
+      border-radius: 999px;
+      z-index: 10;
+    }
+
+    /* Screen 1: Splash */
+    .screen-splash {
+      height: 100%;
+      background: linear-gradient(180deg, #FFF8F3 0%, #FFE8D6 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 32px;
+    }
+
+    .splash-icon {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 32px;
+      box-shadow: 0 20px 60px rgba(255,126,95,0.3);
+    }
+
+    .splash-icon svg {
+      width: 60px;
+      height: 60px;
+    }
+
+    .splash-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 36px;
+      color: #5D4E45;
+      margin-bottom: 12px;
+      letter-spacing: 0.15em;
+    }
+
+    .splash-desc {
+      color: #8B7B6B;
+      font-size: 15px;
+      text-align: center;
+      line-height: 1.8;
+      margin-bottom: 48px;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);
+      border: none;
+      border-radius: 25px;
+      color: #FFF;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 24px rgba(255,126,95,0.35);
+    }
+
+    .btn-secondary {
+      padding: 12px 24px;
+      background: transparent;
+      border: none;
+      color: #8B7B6B;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    /* Screen 2: Register */
+    .screen-register {
+      height: 100%;
+      background: #FFF8F3;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .register-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .register-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+
+    .register-icon svg {
+      width: 40px;
+      height: 40px;
+    }
+
+    .register-title {
+      font-size: 24px;
+      color: #5D4E45;
+      margin-bottom: 8px;
+    }
+
+    .register-subtitle {
+      color: #8B7B6B;
+      font-size: 14px;
+    }
+
+    .register-input {
+      width: 100%;
+      padding: 18px 20px;
+      font-size: 17px;
+      border: 2px solid #F0E6DE;
+      border-radius: 16px;
+      background: #FFF;
+      outline: none;
+      margin-bottom: 24px;
+      transition: border-color 0.2s;
+    }
+
+    .register-input:focus {
+      border-color: #FF9A76;
+    }
+
+    .register-preview {
+      background: #FFF5EE;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .preview-title {
+      font-size: 15px;
+      color: #5D4E45;
+      margin-bottom: 12px;
+    }
+
+    .preview-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .preview-tag {
+      background: #FFE8D6;
+      color: #8B5A3C;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+    }
+
+    .register-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);
+      border: none;
+      border-radius: 25px;
+      color: #FFF;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(255,126,95,0.35);
+    }
+
+    /* Screen 3: Main Chat */
+    .screen-chat {
+      height: 100%;
+      background: linear-gradient(180deg, #FFFBF8 0%, #FFF5EE 100%);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-header {
+      padding: 16px 20px;
+      background: #FFF;
+      border-bottom: 1px solid #F5EDE6;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .chat-header-left h2 {
+      font-size: 18px;
+      color: #5D4E45;
+      font-weight: 600;
+    }
+
+    .chat-header-left p {
+      font-size: 12px;
+      color: #8B7B6B;
+    }
+
+    .chat-header-right {
+      display: flex;
+      gap: 16px;
+    }
+
+    .chat-header-right svg {
+      cursor: pointer;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+    }
+
+    .quote-card {
+      background: linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 24px rgba(255,126,95,0.25);
+    }
+
+    .quote-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .quote-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #FFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+      font-size: 18px;
+    }
+
+    .quote-info p {
+      color: #FFF;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .quote-info span {
+      color: rgba(255,255,255,0.7);
+      font-size: 11px;
+    }
+
+    .quote-text {
+      color: #FFF;
+      font-size: 16px;
+      line-height: 1.7;
+      font-family: 'Noto Serif SC', serif;
+    }
+
+    .message {
+      display: flex;
+      margin-bottom: 16px;
+    }
+
+    .message.user {
+      justify-content: flex-end;
+    }
+
+    .message-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+
+    .message.user .message-avatar {
+      margin-right: 0;
+      margin-left: 10px;
+    }
+
+    .message-bubble-wrapper {
+      max-width: 75%;
+    }
+
+    .message.user .message-bubble-wrapper {
+      text-align: right;
+    }
+
+    .message-sender {
+      font-size: 12px;
+      color: #8B7B6B;
+      margin-bottom: 4px;
+    }
+
+    .message-bubble {
+      background: #FFF;
+      border-radius: 4px 16px 16px 16px;
+      padding: 12px 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .message.user .message-bubble {
+      background: linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);
+      color: #FFF;
+      border-radius: 16px 4px 16px 16px;
+    }
+
+    .message-text {
+      font-size: 15px;
+      color: #5D4E45;
+      line-height: 1.6;
+    }
+
+    .message.user .message-text {
+      color: #FFF;
+    }
+
+    .message-highlight {
+      color: #FF7E5F;
+      font-weight: 600;
+    }
+
+    .message.user .message-highlight {
+      color: #FFE4D6;
+    }
+
+    .mentions-bar {
+      display: flex;
+      gap: 6px;
+      font-size: 13px;
+    }
+
+    .mention-link {
+      color: #FF7E5F;
+      font-weight: 500;
+    }
+
+    .members-row {
+      display: flex;
+      align-items: center;
+      margin-left: 46px;
+      margin-bottom: 20px;
+      gap: 8px;
+    }
+
+    .member-dot {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+    }
+
+    .member-count {
+      font-size: 12px;
+      color: #8B7B6B;
+    }
+
+    .chat-input-bar {
+      background: #FFF;
+      border-top: 1px solid #F5EDE6;
+      padding: 12px 16px 34px;
+    }
+
+    .chat-input-hint {
+      font-size: 12px;
+      color: #8B7B6B;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .mentions-scroll {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .mention-chip {
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #5D4E45;
+      cursor: pointer;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .mention-chip span {
+      font-size: 16px;
+    }
+
+    /* Screen 4: Asking */
+    .screen-asking {
+      height: 100%;
+      background: linear-gradient(180deg, #FFFBF8 0%, #FFF5EE 100%);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .asking-header {
+      padding: 16px 20px;
+      background: #FFF;
+      border-bottom: 1px solid #F5EDE6;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .back-btn {
+      cursor: pointer;
+    }
+
+    .asking-header h2 {
+      font-size: 17px;
+      color: #5D4E45;
+      font-weight: 600;
+    }
+
+    .asking-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+    }
+
+    .asking-input-bar {
+      background: #FFF;
+      border-top: 1px solid #F5EDE6;
+      padding: 12px 16px 34px;
+    }
+
+    .input-wrapper {
+      display: flex;
+      align-items: center;
+      background: #F8F4F0;
+      border-radius: 24px;
+      padding: 10px 16px;
+    }
+
+    .input-wrapper svg {
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+
+    .input-wrapper input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-size: 15px;
+      color: #5D4E45;
+      outline: none;
+    }
+
+    .send-btn {
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    /* Screen 5: Multi Response */
+    .response-header {
+      padding: 16px 20px;
+      background: #FFF;
+      border-bottom: 1px solid #F5EDE6;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .response-header h2 {
+      font-size: 17px;
+      color: #5D4E45;
+      font-weight: 600;
+    }
+
+    .response-item {
+      display: flex;
+      margin-bottom: 10px;
+    }
+
+    .response-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 8px;
+      flex-shrink: 0;
+      font-size: 14px;
+    }
+
+    .response-bubble-wrapper {
+      max-width: 78%;
+    }
+
+    .response-sender {
+      font-size: 11px;
+      margin-bottom: 3px;
+    }
+
+    .response-bubble {
+      background: #FFF;
+      border-radius: 4px 14px 14px 14px;
+      padding: 10px 14px;
+    }
+
+    .response-text {
+      font-size: 14px;
+      color: #5D4E45;
+      line-height: 1.6;
+    }
+
+    .response-highlight {
+      font-weight: 600;
+    }
+
+    .response-divider {
+      text-align: center;
+      padding: 8px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .divider-line {
+      width: 30px;
+      height: 1px;
+      background: #E8DDD5;
+    }
+
+    .divider-text {
+      font-size: 11px;
+      color: #B8A899;
+    }
+
+  </style>
+</head>
+<body>
+
+  <h1>心岛</h1>
+  <p class="subtitle">释放你的焦虑与孤独</p>
+
+  <div class="phones-container">
+
+    <!-- Screen 1: Splash -->
+    <div class="phone-wrapper">
+      <div class="phone-label">启动页 · 温暖的第一印象</div>
+      <div class="iphone">
+        <div class="iphone-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <div style="display:flex;align-items:flex-end;gap:2px;height:12px;">
+                <div style="width:3px;height:4px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:6px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:9px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:11px;background:currentColor;border-radius:1px;"></div>
+              </div>
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none" style="color:#000">
+                <path d="M8 11.5a1 1 0 100-2 1 1 0 000 2z" fill="currentColor"/>
+                <path d="M3 7.5a7 7 0 0110 0" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+              </svg>
+              <div style="width:26px;height:12px;border:1.5px solid currentColor;border-radius:3px;padding:1px;position:relative;">
+                <div style="width:75%;height:100%;background:currentColor;border-radius:1px;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="dynamic-island"></div>
+
+          <div class="screen-splash">
+            <div class="splash-icon">
+              <svg viewBox="0 0 60 60" fill="none">
+                <path d="M30 10C30 10 20 18 20 28C20 38 30 45 30 45C30 45 40 38 40 28C40 18 30 10 30 10Z" fill="#FFF" fill-opacity="0.9"/>
+                <path d="M25 50C25 50 15 48 12 52C12 52 18 56 25 54" fill="#FFF" fill-opacity="0.6"/>
+                <path d="M35 50C35 50 45 48 48 52C48 52 42 56 35 54" fill="#FFF" fill-opacity="0.6"/>
+              </svg>
+            </div>
+            <h2 class="splash-title">心岛</h2>
+            <p class="splash-desc">在这里，你不再孤独<br/>释放焦虑，遇见智者的温暖陪伴</p>
+            <button class="btn-primary">开始探索</button>
+            <button class="btn-secondary">已有账号？登录</button>
+          </div>
+
+          <div class="home-indicator"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 2: Register -->
+    <div class="phone-wrapper">
+      <div class="phone-label">注册 · 昵称 + 群组预览</div>
+      <div class="iphone">
+        <div class="iphone-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <div style="display:flex;align-items:flex-end;gap:2px;height:12px;">
+                <div style="width:3px;height:4px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:6px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:9px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:11px;background:currentColor;border-radius:1px;"></div>
+              </div>
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none" style="color:#000">
+                <path d="M8 11.5a1 1 0 100-2 1 1 0 000 2z" fill="currentColor"/>
+                <path d="M3 7.5a7 7 0 0110 0" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+              </svg>
+              <div style="width:26px;height:12px;border:1.5px solid currentColor;border-radius:3px;padding:1px;position:relative;">
+                <div style="width:75%;height:100%;background:currentColor;border-radius:1px;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="dynamic-island"></div>
+
+          <div class="screen-register">
+            <div class="register-header">
+              <div class="register-icon">
+                <svg viewBox="0 0 40 40" fill="none">
+                  <path d="M20 8C20 8 13 14 13 20C13 26 20 31 20 31C20 31 27 26 27 20C27 14 20 8 20 8Z" fill="#FFF"/>
+                </svg>
+              </div>
+              <h2 class="register-title">欢迎来到心岛</h2>
+              <p class="register-subtitle">给自己起个温暖的名字吧</p>
+            </div>
+
+            <input type="text" class="register-input" placeholder="输入你的昵称" value="小明">
+
+            <div class="register-preview">
+              <h3 class="preview-title">🌴 你将加入一个温暖的群组</h3>
+              <div class="preview-tags">
+                <span class="preview-tag">Naval（生活智者）</span>
+                <span class="preview-tag">保罗·格雷厄姆（职场顾问）</span>
+                <span class="preview-tag">费曼（学习导师）</span>
+                <span class="preview-tag">张一鸣（产品大师）</span>
+                <span class="preview-tag">MrBeast（娱乐顾问）</span>
+              </div>
+            </div>
+
+            <button class="register-btn">进入心岛</button>
+          </div>
+
+          <div class="home-indicator"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 3: Main Chat -->
+    <div class="phone-wrapper">
+      <div class="phone-label">入群 · 欢迎语 + 能量句</div>
+      <div class="iphone">
+        <div class="iphone-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <div style="display:flex;align-items:flex-end;gap:2px;height:12px;">
+                <div style="width:3px;height:4px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:6px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:9px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:11px;background:currentColor;border-radius:1px;"></div>
+              </div>
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none" style="color:#000">
+                <path d="M8 11.5a1 1 0 100-2 1 1 0 000 2z" fill="currentColor"/>
+                <path d="M3 7.5a7 7 0 0110 0" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+              </svg>
+              <div style="width:26px;height:12px;border:1.5px solid currentColor;border-radius:3px;padding:1px;position:relative;">
+                <div style="width:75%;height:100%;background:currentColor;border-radius:1px;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="dynamic-island"></div>
+
+          <div class="screen-chat">
+            <div class="chat-header">
+              <div class="chat-header-left">
+                <h2>心岛群聊</h2>
+                <p>5位智者 · 随时为你解答</p>
+              </div>
+              <div class="chat-header-right">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8B7B6B" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+                </svg>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8B7B6B" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="chat-messages">
+              <!-- Quote Card -->
+              <div class="quote-card">
+                <div class="quote-header">
+                  <div class="quote-avatar">🏝️</div>
+                  <div class="quote-info">
+                    <p>群主</p>
+                    <span>每天 09:00</span>
+                  </div>
+                </div>
+                <p class="quote-text">「不必急着得到所有答案。<br/>有些路，走着走着就清晰了。」<br/><span style="font-size:13px;opacity:0.8;">—— 今日能量句</span></p>
+              </div>
+
+              <!-- Welcome Message -->
+              <div class="message">
+                <div class="message-avatar" style="background:linear-gradient(135deg, #FFD4C4 0%, #FFBDA8 100%);">🏝️</div>
+                <div class="message-bubble-wrapper">
+                  <p class="message-sender">群主</p>
+                  <div class="message-bubble">
+                    <p class="message-text">Hi <span class="message-highlight">小明</span>, 我是这个群的主理人，全力保障你的生活 / 工作 / 感情 ✨</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Mentions Message -->
+              <div class="message">
+                <div class="message-avatar" style="background:transparent;"></div>
+                <div class="message-bubble-wrapper">
+                  <div class="message-bubble" style="background:#FFF5EE;">
+                    <p class="message-text">我们团队里还有<br/>
+                      <span class="mention-link">@Naval</span>、<span style="color:#6B8E9F">@保罗·格雷厄姆</span>、<span style="color:#9B8AA8">@费曼</span>、<span style="color:#7B9E8B">@张一鸣</span>、<span style="color:#C49B6A">@MrBeast</span><br/>
+                      有什么问题可以直接@他们来给你解答 🙏
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Members row -->
+              <div class="members-row">
+                <div class="member-dot" style="background:#FFE4D6;"></div>
+                <div class="member-dot" style="background:#D6E8F0;"></div>
+                <div class="member-dot" style="background:#E8DFF0;"></div>
+                <div class="member-dot" style="background:#DFF0E8;"></div>
+                <div class="member-dot" style="background:#F0EBD6;"></div>
+                <span class="member-count">+99 在岛上</span>
+              </div>
+            </div>
+
+            <div class="chat-input-bar">
+              <p class="chat-input-hint">点击@呼唤智者们</p>
+              <div class="mentions-scroll">
+                <div class="mention-chip" style="background:#FFD4C4;">🏝️ 群主</div>
+                <div class="mention-chip" style="background:#FFE4D6;">🌊 @Naval</div>
+                <div class="mention-chip" style="background:#D6E8F0;">💼 @PG</div>
+                <div class="mention-chip" style="background:#E8DFF0;">🔬 @费曼</div>
+                <div class="mention-chip" style="background:#DFF0E8;">📱 @张一鸣</div>
+                <div class="mention-chip" style="background:#F0EBD6;">🎬 @MrBeast</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="home-indicator"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 4: Asking -->
+    <div class="phone-wrapper">
+      <div class="phone-label">提问 · @Naval 答疑</div>
+      <div class="iphone">
+        <div class="iphone-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <div style="display:flex;align-items:flex-end;gap:2px;height:12px;">
+                <div style="width:3px;height:4px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:6px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:9px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:11px;background:currentColor;border-radius:1px;"></div>
+              </div>
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none" style="color:#000">
+                <path d="M8 11.5a1 1 0 100-2 1 1 0 000 2z" fill="currentColor"/>
+                <path d="M3 7.5a7 7 0 0110 0" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+              </svg>
+              <div style="width:26px;height:12px;border:1.5px solid currentColor;border-radius:3px;padding:1px;position:relative;">
+                <div style="width:75%;height:100%;background:currentColor;border-radius:1px;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="dynamic-island"></div>
+
+          <div class="screen-asking">
+            <div class="asking-header">
+              <svg class="back-btn" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8B7B6B" stroke-width="2">
+                <path d="M15 18l-6-6 6-6"/>
+              </svg>
+              <h2>正在咨询 @Naval</h2>
+            </div>
+
+            <div class="asking-messages">
+              <!-- User Question -->
+              <div class="message user">
+                <div class="message-bubble-wrapper">
+                  <p class="message-sender">小明</p>
+                  <div class="message-bubble">
+                    <p class="message-text">Naval，我最近同时想做自媒体、写书、还想要独立开发，精力完全不够怎么办？😫</p>
+                  </div>
+                </div>
+                <div class="message-avatar" style="background:linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);margin-left:10px;margin-right:0;">👤</div>
+              </div>
+
+              <!-- Naval Response -->
+              <div class="message">
+                <div class="message-avatar" style="background:linear-gradient(135deg, #FFE4D6 0%, #FFD4C4 100%);">🌊</div>
+                <div class="message-bubble-wrapper">
+                  <p class="message-sender" style="color:#CC7A5A;">@Naval</p>
+                  <div class="message-bubble">
+                    <p class="message-text">你列了三个欲望。每个欲望都是你跟不快乐签的一份合同。</p>
+                    <p class="message-text" style="margin-top:8px;"><strong class="message-highlight">不是精力不够，是合同太多。</strong></p>
+                    <p class="message-text" style="margin-top:8px;">问你自己：<span class="message-highlight">哪一个做起来你会忘记时间？</span><br/>那个就是你的特定知识所在。</p>
+                    <p class="message-text" style="margin-top:8px;">不是三选一。<strong class="message-highlight">是先一，再一，再一。</strong><br/>串行复利，不是并行内耗。</p>
+                  </div>
+                  <p class="message-sender" style="margin-top:6px;font-size:11px;color:#B8A899;">刚刚</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="asking-input-bar">
+              <div class="input-wrapper">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8B7B6B" stroke-width="2">
+                  <circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>
+                </svg>
+                <input type="text" placeholder="继续问 @Naval...">
+                <svg class="send-btn" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF9A76" stroke-width="2">
+                  <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="home-indicator"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 5: Multi Response -->
+    <div class="phone-wrapper">
+      <div class="phone-label">群聊 · 多位智者回应</div>
+      <div class="iphone">
+        <div class="iphone-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <div style="display:flex;align-items:flex-end;gap:2px;height:12px;">
+                <div style="width:3px;height:4px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:6px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:9px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:11px;background:currentColor;border-radius:1px;"></div>
+              </div>
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none" style="color:#000">
+                <path d="M8 11.5a1 1 0 100-2 1 1 0 000 2z" fill="currentColor"/>
+                <path d="M3 7.5a7 7 0 0110 0" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+              </svg>
+              <div style="width:26px;height:12px;border:1.5px solid currentColor;border-radius:3px;padding:1px;position:relative;">
+                <div style="width:75%;height:100%;background:currentColor;border-radius:1px;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="dynamic-island"></div>
+
+          <div class="screen-chat">
+            <div class="response-header">
+              <svg class="back-btn" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8B7B6B" stroke-width="2">
+                <path d="M15 18l-6-6 6-6"/>
+              </svg>
+              <h2>群聊</h2>
+            </div>
+
+            <div class="chat-messages">
+              <!-- User Question -->
+              <div class="message user">
+                <div class="message-bubble-wrapper">
+                  <p class="message-sender">小明</p>
+                  <div class="message-bubble">
+                    <p class="message-text">想辞职创业但又怕失败，应该怎么考虑？</p>
+                  </div>
+                </div>
+                <div class="message-avatar" style="background:linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);margin-left:10px;margin-right:0;">👤</div>
+              </div>
+
+              <!-- PG Response -->
+              <div class="response-item">
+                <div class="response-avatar" style="background:#D6E8F0;">💼</div>
+                <div class="response-bubble-wrapper">
+                  <p class="response-sender" style="color:#6B8E9F;">@保罗·格雷厄姆</p>
+                  <div class="response-bubble">
+                    <p class="response-text">创业最坏的损失是什么？其实是<strong style="color:#4A7A8F;">时间</strong>。如果你还年轻，失败一次不算什么。关键是：你是在「创业」还是「做生意」？</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Naval Response -->
+              <div class="response-item">
+                <div class="response-avatar" style="background:#FFE4D6;">🌊</div>
+                <div class="response-bubble-wrapper">
+                  <p class="response-sender" style="color:#CC7A5A;">@Naval</p>
+                  <div class="response-bubble">
+                    <p class="response-text"><strong class="response-highlight" style="color:#FF7E5F;">欲望等于恐惧。</strong>你有多想要它，就有多怕失去它。问自己：如果失败了你还能活下去吗？如果能，就去。</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Feynman Response -->
+              <div class="response-item">
+                <div class="response-avatar" style="background:#E8DFF0;">🔬</div>
+                <div class="response-bubble-wrapper">
+                  <p class="response-sender" style="color:#7A6A8F;">@费曼</p>
+                  <div class="response-bubble">
+                    <p class="response-text">别想太多。<span style="color:#9B8AA8;">先做一个小实验，验证你最核心的假设。</span>数据会告诉你答案，而不是你的胡思乱想。</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Zhang Response -->
+              <div class="response-item">
+                <div class="response-avatar" style="background:#DFF0E8;">📱</div>
+                <div class="response-bubble-wrapper">
+                  <p class="response-sender" style="color:#5A7B6A;">@张一鸣</p>
+                  <div class="response-bubble">
+                    <p class="response-text">你的最小MVP是什么？<span style="color:#7B9E8B;">先验证需求，再all in。</span>不要一上来就做完美产品。</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Divider -->
+              <div class="response-divider">
+                <div class="divider-line"></div>
+                <span class="divider-text">5位智者已回复 · 查看更多</span>
+                <div class="divider-line"></div>
+              </div>
+            </div>
+
+            <div class="asking-input-bar">
+              <div class="input-wrapper">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8B7B6B" stroke-width="2">
+                  <circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>
+                </svg>
+                <input type="text" placeholder="继续和大家聊聊...">
+                <svg class="send-btn" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF9A76" stroke-width="2">
+                  <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="home-indicator"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
