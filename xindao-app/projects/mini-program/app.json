@@ -1,0 +1,54 @@
+{
+  "pages": [
+    "pages/splash/splash",
+    "pages/onboarding/onboarding",
+    "pages/auth/auth",
+    "pages/choose-advisor/choose-advisor",
+    "pages/chat/chat",
+    "pages/today/today",
+    "pages/progress/progress",
+    "pages/profile/profile",
+    "pages/distill/distill"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#FFF8F3",
+    "navigationBarTitleText": "心岛",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#B8A899",
+    "selectedColor": "#FF9A76",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/chat/chat",
+        "text": "聊天",
+        "iconPath": "assets/tab-chat.png",
+        "selectedIconPath": "assets/tab-chat-active.png"
+      },
+      {
+        "pagePath": "pages/today/today",
+        "text": "今日",
+        "iconPath": "assets/tab-today.png",
+        "selectedIconPath": "assets/tab-today-active.png"
+      },
+      {
+        "pagePath": "pages/progress/progress",
+        "text": "进度",
+        "iconPath": "assets/tab-progress.png",
+        "selectedIconPath": "assets/tab-progress-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "assets/tab-profile.png",
+        "selectedIconPath": "assets/tab-profile-active.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

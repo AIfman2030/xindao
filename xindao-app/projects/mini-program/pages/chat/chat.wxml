@@ -1,0 +1,98 @@
+<!-- pages/chat/chat.wxml -->
+<view class="chat-page">
+  <!-- 顶部导航 -->
+  <view class="chat-header">
+    <view class="header-left">
+      <view class="advisor-avatar" style="background: {{advisor.avatar_color}}">
+        <text>{{advisor.avatar_emoji}}</text>
+      </view>
+      <view class="advisor-info">
+        <text class="advisor-name">@{{advisor.name}}</text>
+        <text class="advisor-desc">你的专属智者</text>
+      </view>
+    </view>
+    <view class="header-right">
+      <text class="icon-more">⚙️</text>
+    </view>
+  </view>
+
+  <!-- 消息区域 -->
+  <scroll-view class="chat-messages" scroll-y="true" scroll-into-view="{{scrollToView}}" scroll-with-animation="true">
+    <block wx:for="{{messages}}" wx:key="id">
+      <!-- 欢迎横幅 -->
+      <view wx:if="{{item.type === 'welcome'}}" class="welcome-banner" id="msg_{{item.id}}">
+        <view class="welcome-header">
+          <view class="welcome-avatar">🏝️</view>
+          <text class="welcome-title">欢迎来到心岛</text>
+        </view>
+        <text class="welcome-text">{{item.content}}</text>
+      </view>
+
+      <!-- 用户消息 -->
+      <view wx:elif="{{item.role === 'user'}}" class="message message-user" id="msg_{{item.id}}">
+        <view class="message-bubble user-bubble">
+          <text>{{item.content}}</text>
+        </view>
+      </view>
+
+      <!-- AI消息 -->
+      <view wx:else class="message message-ai" id="msg_{{item.id}}">
+        <view class="message-avatar" style="background: {{item.avatar_color || advisor.avatar_color}}">
+          <text>{{item.avatar_emoji || advisor.avatar_emoji}}</text>
+        </view>
+        <view class="message-bubble ai-bubble">
+          <text class="message-sender">@{{item.sender}} · 刚刚</text>
+          <text class="message-content">{{item.content}}</text>
+        </view>
+      </view>
+    </block>
+
+    <!-- 行动卡 -->
+    <view wx:if="{{actionCard}}" class="action-card-container" id="action_card">
+      <view class="action-card">
+        <view class="action-card-header">
+          <text class="action-icon">🎯</text>
+          <text class="action-title">今日行动</text>
+          <view class="action-badge">新鲜生成</view>
+        </view>
+        <view class="action-list">
+          <block wx:for="{{actionCard.items}}" wx:key="id">
+            <view class="action-item {{item.done ? 'completed' : ''}}" bindtap="onToggleAction" data-index="{{index}}">
+              <view class="action-check {{item.done ? 'done' : ''}}">
+                <text wx:if="{{item.done}}">✓</text>
+              </view>
+              <view class="action-content">
+                <text class="action-text">{{item.text}}</text>
+                <text class="action-time">{{item.time}}</text>
+              </view>
+            </view>
+          </block>
+        </view>
+      </view>
+    </view>
+
+    <!-- 打字中状态 -->
+    <view wx:if="{{isTyping}}" class="typing-indicator">
+      <view class="typing-dot"></view>
+      <view class="typing-dot"></view>
+      <view class="typing-dot"></view>
+    </view>
+
+    <view id="bottom"></view>
+  </scroll-view>
+
+  <!-- 底部输入栏 -->
+  <view class="chat-input-bar">
+    <view class="input-row">
+      <view class="input-box">
+        <input type="text" value="{{inputValue}}" placeholder="问 @{{advisor.name}} 任何问题..." bindinput="onInputChange" bindconfirm="onSendMessage" />
+      </view>
+      <view wx:if="{{!isRecording}}" class="voice-btn" bindtap="onStartRecord">
+        <text>🎤</text>
+      </view>
+      <view wx:else class="voice-btn recording" bindtap="onEndRecord">
+        <text>⏹</text>
+      </view>
+    </view>
+  </view>
+</view>

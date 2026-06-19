@@ -1,0 +1,19 @@
+<!-- pages/splash/splash.wxml -->
+<view class="splash-container">
+  <!-- Logo区域 -->
+  <view class="logo-area">
+    <view class="logo" animation="{{logoAnimation}}">
+      <view class="logo-icon">
+        <text class="logo-text">🏝️</text>
+      </view>
+    </view>
+    <text class="brand-name">心岛</text>
+    <text class="brand-tagline">释放你的焦虑与孤独</text>
+  </view>
+
+  <!-- 按钮区域 -->
+  <view class="button-area">
+    <button class="btn-start" bindtap="onStartTap">开始探索</button>
+    <text class="btn-login" bindtap="onLoginTap">已有账号？登录</text>
+  </view>
+</view>

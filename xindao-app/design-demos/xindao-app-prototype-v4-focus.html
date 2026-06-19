@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>心岛 - 释放你的焦虑与孤独</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #fef6f0 0%, #fdf2eb 50%, #f8e8dc 100%);
+      min-height: 100vh;
+      padding: 30px 15px;
+    }
+
+    h1 {
+      text-align: center;
+      font-family: 'Noto Serif SC', serif;
+      font-size: 28px;
+      color: #5a4a42;
+      margin-bottom: 8px;
+      letter-spacing: 0.15em;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #8b7355;
+      font-size: 14px;
+      margin-bottom: 35px;
+      font-weight: 300;
+    }
+
+    .phones-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      justify-content: center;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .phone-label {
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 13px;
+      color: #8b7355;
+      font-style: italic;
+    }
+
+    .phone-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* iPhone Frame */
+    .iphone {
+      width: 393px;
+      height: 852px;
+      background: #000;
+      border-radius: 60px;
+      padding: 12px;
+      box-shadow: 0 0 0 2px #1f2937, 0 20px 60px rgba(0,0,0,0.25);
+      position: relative;
+    }
+
+    .iphone-screen {
+      width: 100%;
+      height: 100%;
+      border-radius: 48px;
+      overflow: hidden;
+      background: #fff;
+      position: relative;
+    }
+
+    .status-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: -apple-system, sans-serif;
+      z-index: 10;
+    }
+
+    .dynamic-island {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 124px;
+      height: 36px;
+      background: #000;
+      border-radius: 999px;
+      z-index: 20;
+    }
+
+    .home-indicator {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 140px;
+      height: 5px;
+      background: rgba(0,0,0,0.25);
+      border-radius: 999px;
+      z-index: 10;
+    }
+
+    /* Screen: Onboarding - Choose Advisor */
+    .screen-onboarding {
+      height: 100%;
+      background: linear-gradient(180deg, #FFF8F3 0%, #FFE8D6 100%);
+      display: flex;
+      flex-direction: column;
+      padding: 70px 24px 24px;
+    }
+
+    .onboarding-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .onboarding-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 28px;
+      color: #5D4E45;
+      margin-bottom: 12px;
+      letter-spacing: 0.1em;
+    }
+
+    .onboarding-subtitle {
+      font-size: 15px;
+      color: #8B7B6B;
+      line-height: 1.6;
+    }
+
+    .advisor-list {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .advisor-card {
+      background: #FFF;
+      border-radius: 20px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+    }
+
+    .advisor-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+
+    .advisor-card.selected {
+      border-color: #FF9A76;
+      background: #FFF8F3;
+    }
+
+    .advisor-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .advisor-info {
+      flex: 1;
+    }
+
+    .advisor-name {
+      font-size: 17px;
+      color: #5D4E45;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .advisor-desc {
+      font-size: 13px;
+      color: #8B7B6B;
+    }
+
+    .advisor-check {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid #E0D5CC;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .advisor-card.selected .advisor-check {
+      background: #FF9A76;
+      border-color: #FF9A76;
+    }
+
+    .onboarding-btn {
+      margin-top: 24px;
+      padding: 16px;
+      background: linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);
+      border: none;
+      border-radius: 25px;
+      color: #FFF;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(255,126,95,0.3);
+    }
+
+    /* Screen: Main Chat - Focus */
+    .screen-main {
+      height: 100%;
+      background: #FFF;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .main-header {
+      padding: 16px 20px;
+      background: #FFF;
+      border-bottom: 1px solid #F5EDE6;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .main-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .main-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .main-title h2 {
+      font-size: 17px;
+      color: #5D4E45;
+      font-weight: 600;
+    }
+
+    .main-title p {
+      font-size: 12px;
+      color: #8B7B6B;
+    }
+
+    .main-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Welcome Card */
+    .welcome-card {
+      background: linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);
+      border-radius: 20px;
+      padding: 20px;
+      color: #FFF;
+    }
+
+    .welcome-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .welcome-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .welcome-greet {
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .welcome-text {
+      font-size: 14px;
+      line-height: 1.6;
+      opacity: 0.95;
+    }
+
+    /* Action Card - Core Feature */
+    .action-card {
+      background: #FFF;
+      border-radius: 16px;
+      padding: 16px;
+      border: 1px solid #F5EDE6;
+    }
+
+    .action-card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .action-card-icon {
+      font-size: 18px;
+    }
+
+    .action-card-title {
+      font-size: 14px;
+      color: #5D4E45;
+      font-weight: 600;
+    }
+
+    .action-card-badge {
+      margin-left: auto;
+      background: #FFF5EE;
+      color: #FF7E5F;
+      padding: 4px 10px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .action-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid #F5EDE6;
+    }
+
+    .action-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .action-check {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid #FF9A76;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .action-check.done {
+      background: #FF9A76;
+    }
+
+    .action-item-text {
+      flex: 1;
+      font-size: 14px;
+      color: #5D4E45;
+    }
+
+    .action-item-time {
+      font-size: 12px;
+      color: #B8A899;
+    }
+
+    /* Chat Message */
+    .message {
+      display: flex;
+      gap: 10px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .message.user {
+      flex-direction: row-reverse;
+    }
+
+    .message-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .message-bubble {
+      max-width: 78%;
+      padding: 12px 16px;
+      border-radius: 16px;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .message.user .message-bubble {
+      background: linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);
+      color: #FFF;
+      border-bottom-right-radius: 4px;
+    }
+
+    .message.ai .message-bubble {
+      background: #F8F4F0;
+      color: #5D4E45;
+      border-bottom-left-radius: 4px;
+    }
+
+    .message-sender {
+      font-size: 12px;
+      color: #8B7B6B;
+      margin-bottom: 4px;
+      margin-left: 4px;
+    }
+
+    /* Input Bar */
+    .input-bar {
+      padding: 12px 16px 40px;
+      background: #FFF;
+      border-top: 1px solid #F5EDE6;
+    }
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .input-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      background: #F8F4F0;
+      border-radius: 24px;
+      padding: 12px 16px;
+    }
+
+    .input-wrapper input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-size: 15px;
+      color: #5D4E45;
+      outline: none;
+    }
+
+    .voice-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(255,126,95,0.3);
+    }
+
+    /* Screen: Progress */
+    .screen-progress {
+      height: 100%;
+      background: #FFF8F3;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .progress-header {
+      padding: 16px 20px;
+      background: #FFF;
+      border-bottom: 1px solid #F5EDE6;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .progress-header h2 {
+      font-size: 17px;
+      color: #5D4E45;
+      font-weight: 600;
+    }
+
+    .progress-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 16px;
+    }
+
+    .progress-card {
+      background: #FFF;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .progress-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .progress-card-title {
+      font-size: 15px;
+      color: #5D4E45;
+      font-weight: 600;
+    }
+
+    .progress-card-date {
+      font-size: 12px;
+      color: #B8A899;
+    }
+
+    .progress-circle {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 20px;
+      position: relative;
+    }
+
+    .progress-circle svg {
+      transform: rotate(-90deg);
+    }
+
+    .progress-circle-bg {
+      fill: none;
+      stroke: #F5EDE6;
+      stroke-width: 10;
+    }
+
+    .progress-circle-fill {
+      fill: none;
+      stroke: #FF9A76;
+      stroke-width: 10;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.5s ease;
+    }
+
+    .progress-circle-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .progress-percent {
+      font-size: 32px;
+      font-weight: 700;
+      color: #5D4E45;
+    }
+
+    .progress-label {
+      font-size: 12px;
+      color: #8B7B6B;
+    }
+
+    .progress-stats {
+      display: flex;
+      justify-content: space-around;
+      padding-top: 16px;
+      border-top: 1px solid #F5EDE6;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: #5D4E45;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #8B7B6B;
+    }
+
+    .stat-value.highlight {
+      color: #FF7E5F;
+    }
+
+    /* Tab Bar */
+    .tab-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: #FFF;
+      border-top: 1px solid #F5EDE6;
+      display: flex;
+      padding: 0 20px;
+      padding-bottom: 24px;
+    }
+
+    .tab-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      color: #B8A899;
+      font-size: 11px;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .tab-item.active {
+      color: #FF9A76;
+    }
+
+    .tab-item svg {
+      width: 24px;
+      height: 24px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <h1>心岛 · 聚焦版</h1>
+  <p class="subtitle">3个核心功能 · 极简设计</p>
+
+  <div class="phones-container">
+
+    <!-- Screen 1: Onboarding - Choose 1 Advisor -->
+    <div class="phone-wrapper">
+      <div class="phone-label">选择你的专属智者（只选1个）</div>
+      <div class="iphone">
+        <div class="iphone-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <div style="display:flex;align-items:flex-end;gap:2px;height:12px;">
+                <div style="width:3px;height:4px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:6px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:9px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:11px;background:currentColor;border-radius:1px;"></div>
+              </div>
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none" style="color:#000">
+                <path d="M8 11.5a1 1 0 100-2 1 1 0 000 2z" fill="currentColor"/>
+                <path d="M3 7.5a7 7 0 0110 0" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+              </svg>
+              <div style="width:26px;height:12px;border:1.5px solid currentColor;border-radius:3px;padding:1px;position:relative;">
+                <div style="width:75%;height:100%;background:currentColor;border-radius:1px;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="dynamic-island"></div>
+
+          <div class="screen-onboarding">
+            <div class="onboarding-header">
+              <h2 class="onboarding-title">选一位知己</h2>
+              <p class="onboarding-subtitle">他将陪你思考、帮你决策<br/>只选一位，专注才能深入</p>
+            </div>
+
+            <div class="advisor-list">
+              <div class="advisor-card selected">
+                <div class="advisor-avatar" style="background:#FFE4D6;">🌊</div>
+                <div class="advisor-info">
+                  <p class="advisor-name">Naval</p>
+                  <p class="advisor-desc">财富 · 幸福 · 人生哲学</p>
+                </div>
+                <div class="advisor-check">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFF" stroke-width="3">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="advisor-card">
+                <div class="advisor-avatar" style="background:#D6E8F0;">💼</div>
+                <div class="advisor-info">
+                  <p class="advisor-name">保罗·格雷厄姆</p>
+                  <p class="advisor-desc">创业 · 职场 · 写作</p>
+                </div>
+                <div class="advisor-check"></div>
+              </div>
+
+              <div class="advisor-card">
+                <div class="advisor-avatar" style="background:#E8DFF0;">🔬</div>
+                <div class="advisor-info">
+                  <p class="advisor-name">费曼</p>
+                  <p class="advisor-desc">学习 · 科学 · 深度理解</p>
+                </div>
+                <div class="advisor-check"></div>
+              </div>
+            </div>
+
+            <button class="onboarding-btn">开始心岛之旅 →</button>
+          </div>
+
+          <div class="home-indicator"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 2: Main Chat with Action Card -->
+    <div class="phone-wrapper">
+      <div class="phone-label">核心界面 · 聊天 + 行动卡</div>
+      <div class="iphone">
+        <div class="iphone-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <div style="display:flex;align-items:flex-end;gap:2px;height:12px;">
+                <div style="width:3px;height:4px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:6px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:9px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:11px;background:currentColor;border-radius:1px;"></div>
+              </div>
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none" style="color:#000">
+                <path d="M8 11.5a1 1 0 100-2 1 1 0 000 2z" fill="currentColor"/>
+                <path d="M3 7.5a7 7 0 0110 0" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+              </svg>
+              <div style="width:26px;height:12px;border:1.5px solid currentColor;border-radius:3px;padding:1px;position:relative;">
+                <div style="width:75%;height:100%;background:currentColor;border-radius:1px;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="dynamic-island"></div>
+
+          <div class="screen-main">
+            <div class="main-header">
+              <div class="main-header-left">
+                <div class="main-avatar">🌊</div>
+                <div class="main-title">
+                  <h2>@Naval</h2>
+                  <p>随时为你解答</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="main-content">
+              <!-- Welcome Card -->
+              <div class="welcome-card">
+                <div class="welcome-header">
+                  <div class="welcome-avatar">🏝️</div>
+                  <span class="welcome-greet">Hi 小明，欢迎来到心岛</span>
+                </div>
+                <p class="welcome-text">我是你的专属智者 Naval。无论生活、工作还是感情上的困惑，都可以和我聊聊。我会帮你理清思路，找到行动方向。</p>
+              </div>
+
+              <!-- Action Card - Today's Tasks -->
+              <div class="action-card">
+                <div class="action-card-header">
+                  <span class="action-card-icon">🎯</span>
+                  <span class="action-card-title">今日行动</span>
+                  <span class="action-card-badge">基于你的问题生成</span>
+                </div>
+                <div class="action-item">
+                  <div class="action-check done">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFF" stroke-width="3">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                  </div>
+                  <span class="action-item-text" style="text-decoration:line-through;color:#B8A899;">列出本周最重要的3件事</span>
+                  <span class="action-item-time">✅ 已完成</span>
+                </div>
+                <div class="action-item">
+                  <div class="action-check"></div>
+                  <span class="action-item-text">今天只做第1件事，其他说"不"</span>
+                  <span class="action-item-time">⏰ 今天</span>
+                </div>
+                <div class="action-item">
+                  <div class="action-check"></div>
+                  <span class="action-item-text">晚上8点回顾：哪个瞬间忘记了时间？</span>
+                  <span class="action-item-time">⏰ 20:00</span>
+                </div>
+              </div>
+
+              <!-- AI Response with Action Suggestion -->
+              <div class="message ai">
+                <div class="message-avatar" style="background:#FFE4D6;">🌊</div>
+                <div class="message-bubble">
+                  <p class="message-sender">@Naval · 刚刚</p>
+                  你问的"精力不够"问题，核心不是时间管理，是<span style="color:#FF7E5F;font-weight:600;">选择</span>。
+                  <br/><br/>
+                  你同时想做3件事，说明你还没想清楚哪件事是<span style="color:#FF7E5F;font-weight:600;">真正重要的</span>。
+                  <br/><br/>
+                  试试这个：哪件事做起来你会忘记时间？
+                </div>
+              </div>
+            </div>
+
+            <div class="input-bar">
+              <div class="input-row">
+                <div class="input-wrapper">
+                  <input type="text" placeholder="问 @Naval 任何问题...">
+                </div>
+                <button class="voice-btn">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFF" stroke-width="2">
+                    <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/>
+                    <path d="M19 10v2a7 7 0 01-14 0v-2"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Tab Bar -->
+            <div class="tab-bar">
+              <div class="tab-item active">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+                </svg>
+                <span>聊天</span>
+              </div>
+              <div class="tab-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                <span>今日</span>
+              </div>
+              <div class="tab-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                  <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+                <span>进度</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="home-indicator"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 3: Progress View -->
+    <div class="phone-wrapper">
+      <div class="phone-label">进度追踪 · 极简完成率</div>
+      <div class="iphone">
+        <div class="iphone-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <div style="display:flex;align-items:flex-end;gap:2px;height:12px;">
+                <div style="width:3px;height:4px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:6px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:9px;background:currentColor;border-radius:1px;"></div>
+                <div style="width:3px;height:11px;background:currentColor;border-radius:1px;"></div>
+              </div>
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none" style="color:#000">
+                <path d="M8 11.5a1 1 0 100-2 1 1 0 000 2z" fill="currentColor"/>
+                <path d="M3 7.5a7 7 0 0110 0" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+              </svg>
+              <div style="width:26px;height:12px;border:1.5px solid currentColor;border-radius:3px;padding:1px;position:relative;">
+                <div style="width:75%;height:100%;background:currentColor;border-radius:1px;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="dynamic-island"></div>
+
+          <div class="screen-progress">
+            <div class="progress-header">
+              <svg class="back-btn" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8B7B6B" stroke-width="2">
+                <path d="M15 18l-6-6 6-6"/>
+              </svg>
+              <h2>我的进度</h2>
+            </div>
+
+            <div class="progress-content">
+              <!-- Main Progress Card -->
+              <div class="progress-card">
+                <div class="progress-card-header">
+                  <span class="progress-card-title">本周行动完成率</span>
+                  <span class="progress-card-date">6月第三周</span>
+                </div>
+                <div class="progress-circle">
+                  <svg width="120" height="120" viewBox="0 0 120 120">
+                    <circle class="progress-circle-bg" cx="60" cy="60" r="52"/>
+                    <circle class="progress-circle-fill" cx="60" cy="60" r="52"
+                      stroke-dasharray="327" stroke-dashoffset="98" />
+                  </svg>
+                  <div class="progress-circle-text">
+                    <div class="progress-percent">70%</div>
+                    <div class="progress-label">完成率</div>
+                  </div>
+                </div>
+                <div class="progress-stats">
+                  <div class="stat-item">
+                    <div class="stat-value highlight">14</div>
+                    <div class="stat-label">已完成</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-value">6</div>
+                    <div class="stat-label">进行中</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">未开始</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Streak Card -->
+              <div class="progress-card">
+                <div class="progress-card-header">
+                  <span class="progress-card-title">🔥 连续行动</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:16px;">
+                  <div style="font-size:48px;font-weight:700;color:#FF7E5F;">5</div>
+                  <div>
+                    <p style="font-size:15px;color:#5D4E45;font-weight:600;">天</p>
+                    <p style="font-size:13px;color:#8B7B6B;">继续保持！</p>
+                  </div>
+                  <div style="margin-left:auto;display:flex;gap:4px;">
+                    <span style="width:24px;height:24px;background:#FF9A76;border-radius:50%;display:inline-block;"></span>
+                    <span style="width:24px;height:24px;background:#FF9A76;border-radius:50%;display:inline-block;"></span>
+                    <span style="width:24px;height:24px;background:#FF9A76;border-radius:50%;display:inline-block;"></span>
+                    <span style="width:24px;height:24px;background:#FF9A76;border-radius:50%;display:inline-block;"></span>
+                    <span style="width:24px;height:24px;background:#FF9A76;border-radius:50%;display:inline-block;"></span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Recent Card -->
+              <div class="progress-card">
+                <div class="progress-card-header">
+                  <span class="progress-card-title">最近完成</span>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:12px;">
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <div style="width:8px;height:8px;background:#FF9A76;border-radius:50%;"></div>
+                    <span style="flex:1;font-size:14px;color:#5D4E45;">列出本周3件最重要的事</span>
+                    <span style="font-size:12px;color:#B8A899;">今天 09:00</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <div style="width:8px;height:8px;background:#FF9A76;border-radius:50%;"></div>
+                    <span style="flex:1;font-size:14px;color:#5D4E45;">拒绝了一件不重要的会议邀请</span>
+                    <span style="font-size:12px;color:#B8A899;">昨天 14:30</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <div style="width:8px;height:8px;background:#FF9A76;border-radius:50%;"></div>
+                    <span style="flex:1;font-size:14px;color:#5D4E45;">晚间复盘：找到忘记时间的那件事</span>
+                    <span style="font-size:12px;color:#B8A899;">昨天 21:00</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tab Bar -->
+            <div class="tab-bar">
+              <div class="tab-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+                </svg>
+                <span>聊天</span>
+              </div>
+              <div class="tab-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                <span>今日</span>
+              </div>
+              <div class="tab-item active">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                  <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+                <span>进度</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="home-indicator"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

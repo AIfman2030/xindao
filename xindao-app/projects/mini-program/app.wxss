@@ -1,0 +1,245 @@
+/* 心岛 App 全局样式 */
+
+/* 主题色变量 */
+page {
+  --primary: #FF9A76;
+  --primary-dark: #FF7E5F;
+  --background: #FFF8F3;
+  --card: #FFFFFF;
+  --text-primary: #5D4E45;
+  --text-secondary: #8B7B6B;
+  --border: #F5EDE6;
+  --success: #4CAF50;
+  --error: #FF5252;
+
+  background-color: var(--background);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* 通用工具类 */
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.gap-sm { gap: 8px; }
+.gap-md { gap: 16px; }
+.gap-lg { gap: 24px; }
+
+.mt-sm { margin-top: 8px; }
+.mt-md { margin-top: 16px; }
+.mt-lg { margin-top: 24px; }
+
+.mb-sm { margin-bottom: 8px; }
+.mb-md { margin-bottom: 16px; }
+.mb-lg { margin-bottom: 24px; }
+
+/* 文字 */
+.text-primary { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-center { text-align: center; }
+
+.text-lg { font-size: 18px; }
+.text-xl { font-size: 20px; }
+.text-xxl { font-size: 24px; }
+
+.font-bold { font-weight: 600; }
+.font-medium { font-weight: 500; }
+
+/* 按钮 */
+.btn-primary {
+  width: 100%;
+  padding: 18px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  border: none;
+  border-radius: 28px;
+  color: #FFFFFF;
+  font-size: 17px;
+  font-weight: 600;
+  box-shadow: 0 8px 30px rgba(255, 126, 95, 0.4);
+}
+
+.btn-primary:active {
+  opacity: 0.9;
+  transform: scale(0.98);
+}
+
+.btn-secondary {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 14px;
+  padding: 12px;
+}
+
+/* 输入框 */
+.input {
+  width: 100%;
+  padding: 18px 20px;
+  font-size: 16px;
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  background: var(--card);
+  outline: none;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  border-color: var(--primary);
+}
+
+.input::placeholder {
+  color: #B8A899;
+}
+
+/* 卡片 */
+.card {
+  background: var(--card);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+/* 头像 */
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.avatar-sm {
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+}
+
+.avatar-lg {
+  width: 64px;
+  height: 64px;
+  font-size: 32px;
+}
+
+/* 标签 */
+.tag {
+  display: inline-block;
+  padding: 4px 12px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: var(--border);
+  border-radius: 12px;
+}
+
+.tag-primary {
+  background: #FFF5EE;
+  color: var(--primary);
+}
+
+/* 进度条 */
+.progress-ring {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 分割线 */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 16px 0;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: var(--text-secondary);
+}
+
+.empty-state-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+/* 加载状态 */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 动画 */
+.fade-in {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-up {
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
