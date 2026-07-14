@@ -1572,6 +1572,12 @@
             </select>
             <p class="key-status" id="key-status">未配置 · 将使用内置 Mock 回复</p>
             <button class="settings-btn" onclick="saveApiKey()">保存 API Key</button>
+
+            <div style="margin-top:16px;padding-top:16px;border-top:1px solid #F0E6DE;">
+              <label class="form-label" style="margin-bottom:8px;display:block;">服务器地址（可选）</label>
+              <input type="text" class="key-input" id="server-url-input" placeholder="http://localhost:3001" value="http://localhost:3001">
+              <p class="key-status">默认连接本地后端服务</p>
+            </div>
           </div>
 
           <div class="settings-card">
@@ -1873,7 +1879,7 @@
       input.value = '';
       renderChat();
 
-      // Show typing
+      // Show typing indicator
       const container = document.getElementById('chat-messages');
       container.insertAdjacentHTML('beforeend', `
         <div class="message ai" id="typing-msg">
@@ -1889,14 +1895,8 @@
       `);
       container.scrollTop = container.scrollHeight;
 
-      // Get AI response
-      let response;
-      if (API_KEY) {
-        response = await callOpenAI(text, advisor?.prompt || '');
-      } else {
-        await new Promise(r => setTimeout(r, 1500));
-        response = generateMockResponse(text, advisor?.name || '');
-      }
+      // Get AI response with streaming
+      const fullContent = await streamChatResponse(text, state.messages.slice(0, -1), advisor);
 
       // Remove typing
       document.getElementById('typing-msg')?.remove();
@@ -1904,20 +1904,130 @@
       // Add AI message
       state.messages.push({
         role: 'ai',
-        content: response,
+        content: fullContent,
         advisorName: advisor?.name,
         advisorEmoji: advisor?.emoji,
         advisorColor: advisor?.color,
         createdAt: new Date().toISOString()
       });
 
-      // Generate actions
-      state.latestActions = generateActions(text);
-      state.actions = [...state.latestActions.map(a => ({...a, done: false})), ...state.actions];
+      // Generate actions by calling API
+      const actionsResult = await generateActionsFromAPI(text, advisor?.id || 'naval');
+      state.latestActions = actionsResult.actions;
+      state.actions = [...state.latestActions, ...state.actions];
 
       saveState();
       renderChat();
       showToast('行动卡已更新 ✨');
+    }
+
+    // 调用后端生成行动卡
+    async function generateActionsFromAPI(message, advisorId) {
+      const apiKey = localStorage.getItem('xindao_api_key') || '';
+      const serverUrl = localStorage.getItem('xindao_server_url') || 'http://localhost:3001';
+
+      try {
+        const response = await fetch(`${serverUrl}/api/generate-actions`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message, advisorId, apiKey })
+        });
+
+        if (!response.ok) {
+          throw new Error('生成行动失败');
+        }
+
+        const data = await response.json();
+        return { actions: data.actions, source: data.source };
+      } catch (error) {
+        console.error('Generate Actions Error:', error);
+        // 回退到前端规则生成
+        return { actions: generateActions(message), source: 'fallback' };
+      }
+    }
+
+    // 流式调用后端聊天 API
+    async function streamChatResponse(userMessage, history, advisor) {
+      const messages = [
+        ...history.map(m => ({ role: m.role, content: m.content })),
+        { role: 'user', content: userMessage }
+      ];
+
+      const apiKey = localStorage.getItem('xindao_api_key') || '';
+      const model = localStorage.getItem('xindao_model') || 'gpt-4o-mini';
+      const serverUrl = localStorage.getItem('xindao_server_url') || 'http://localhost:3001';
+
+      let fullContent = '';
+      let typingEl = document.getElementById('typing-msg');
+
+      try {
+        const response = await fetch(`${serverUrl}/api/chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            messages: messages,
+            advisorId: advisor?.id || 'naval',
+            apiKey: apiKey,
+            model: model
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('请求失败');
+        }
+
+        // 处理 SSE 流式响应
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value);
+          const lines = chunk.split('\n');
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              const data = line.slice(6);
+              if (data === '[DONE]') continue;
+
+              try {
+                const parsed = JSON.parse(data);
+                if (parsed.content) {
+                  fullContent += parsed.content;
+                  // 实时更新显示
+                  if (typingEl) {
+                    const bubble = typingEl.querySelector('.message-bubble');
+                    if (bubble) {
+                      bubble.innerHTML = fullContent;
+                      container.scrollTop = container.scrollHeight;
+                    }
+                  }
+                }
+                if (parsed.error) {
+                  throw new Error(parsed.error);
+                }
+              } catch (e) {
+                // 忽略解析错误
+              }
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Chat Error:', error);
+        // 如果后端不可用，回退到 Mock 模式
+        if (typingEl) {
+          const bubble = typingEl.querySelector('.message-bubble');
+          if (bubble) {
+            bubble.innerHTML = '<div class="typing"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>';
+          }
+        }
+        await new Promise(r => setTimeout(r, 1000));
+        fullContent = generateMockResponse(userMessage, advisor?.name || '智者');
+      }
+
+      return fullContent;
     }
 
     async function callOpenAI(userMessage, systemPrompt) {
@@ -2060,6 +2170,7 @@
     function updateSettingsInfo() {
       document.getElementById('api-key-input').value = API_KEY;
       document.getElementById('model-select').value = AI_MODEL;
+      document.getElementById('server-url-input').value = localStorage.getItem('xindao_server_url') || 'http://localhost:3001';
 
       const statusEl = document.getElementById('key-status');
       if (API_KEY) {
@@ -2110,8 +2221,10 @@
     function saveApiKey() {
       API_KEY = document.getElementById('api-key-input').value.trim();
       AI_MODEL = document.getElementById('model-select').value;
+      const SERVER_URL = document.getElementById('server-url-input').value.trim();
       localStorage.setItem('xindao_api_key', API_KEY);
       localStorage.setItem('xindao_model', AI_MODEL);
+      localStorage.setItem('xindao_server_url', SERVER_URL || 'http://localhost:3001');
       updateSettingsInfo();
       showToast(API_KEY ? 'API Key 已保存 ✨' : '已清除，使用 Mock 模式');
     }
