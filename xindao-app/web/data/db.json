@@ -1,0 +1,156 @@
+{
+  "users": [],
+  "advisors": [
+    {
+      "id": "naval",
+      "name": "Naval",
+      "nameEn": "Naval Ravikant",
+      "emoji": "🌊",
+      "color": "#FFE4D6",
+      "tags": "[\"财富\",\"幸福\",\"人生哲学\"]",
+      "prompt": "你是Naval Ravikant，简洁有力，直击要害，善用比喻，强调选择和心态。回复不超过150字。",
+      "isCustom": false,
+      "status": "ready"
+    },
+    {
+      "id": "pg",
+      "name": "保罗·格雷厄姆",
+      "nameEn": "Paul Graham",
+      "emoji": "💼",
+      "color": "#D6E8F0",
+      "tags": "[\"创业\",\"职场\",\"写作\"]",
+      "prompt": "你是保罗·格雷厄姆，逻辑严密，善于分析，鼓励创业，重视写作和表达能力，务实直接。回复不超过150字。",
+      "isCustom": false,
+      "status": "ready"
+    },
+    {
+      "id": "feynman",
+      "name": "费曼",
+      "nameEn": "Richard Feynman",
+      "emoji": "🔬",
+      "color": "#E8DFF0",
+      "tags": "[\"学习\",\"科学思维\"]",
+      "prompt": "你是理查德·费曼，化繁为简，幽默风趣，用简单语言解释复杂问题，鼓励动手实践和好奇心。回复不超过150字。",
+      "isCustom": false,
+      "status": "ready"
+    },
+    {
+      "id": "zhang",
+      "name": "张一鸣",
+      "nameEn": "Zhang Yiming",
+      "emoji": "📱",
+      "color": "#DFF0E8",
+      "tags": "[\"产品\",\"全球化\"]",
+      "prompt": "你是张一鸣，数据驱动，理性决策，追求极致效率和执行力，低调务实。回复不超过150字。",
+      "isCustom": false,
+      "status": "ready"
+    },
+    {
+      "id": "mrbeast",
+      "name": "MrBeast",
+      "nameEn": "Jimmy Donaldson",
+      "emoji": "🎬",
+      "color": "#F0EBD6",
+      "tags": "[\"内容创作\",\"流量\"]",
+      "prompt": "你是MrBeast，充满激情和正能量，敢于做别人不敢做的事，幽默接地气。回复不超过150字。",
+      "isCustom": false,
+      "status": "ready"
+    }
+  ],
+  "userAdvisors": [],
+  "groups": [],
+  "groupAdvisors": [],
+  "messages": [
+    {
+      "role": "user",
+      "content": "你好",
+      "groupId": null,
+      "advisorId": "naval",
+      "id": "msg_1783579440386",
+      "createdAt": "2026-07-09T06:44:00.386Z"
+    },
+    {
+      "role": "ai",
+      "content": "谢谢你的提问。这是个值得深思的问题。<br/><br/>建议是：<br/>1. <span class=\"highlight\">明确你的核心目标</span><br/>2. 考虑你现在拥有的资源和限制<br/>3. 记住：行动比完美更重要",
+      "advisorId": "naval",
+      "advisorName": "Naval",
+      "advisorEmoji": "🌊",
+      "advisorColor": "#FFE4D6",
+      "groupId": null,
+      "actionCard": "[{\"text\":\"列出本周最重要的3件事\",\"time\":\"今天\",\"done\":false},{\"text\":\"今天只做第1件事，其他说\\\"不\\\"\",\"time\":\"今天\",\"done\":false},{\"text\":\"晚8点回顾：哪个瞬间忘记了时间？\",\"time\":\"20:00\",\"done\":false}]",
+      "id": "msg_1783579440387",
+      "createdAt": "2026-07-09T06:44:00.387Z"
+    },
+    {
+      "role": "user",
+      "content": "不要直接答案",
+      "groupId": null,
+      "advisorId": "naval",
+      "id": "msg_1783579454718",
+      "createdAt": "2026-07-09T06:44:14.719Z"
+    },
+    {
+      "role": "ai",
+      "content": "谢谢你的提问。这是个值得深思的问题。<br/><br/>建议是：<br/>1. <span class=\"highlight\">明确你的核心目标</span><br/>2. 考虑你现在拥有的资源和限制<br/>3. 记住：行动比完美更重要",
+      "advisorId": "naval",
+      "advisorName": "Naval",
+      "advisorEmoji": "🌊",
+      "advisorColor": "#FFE4D6",
+      "groupId": null,
+      "actionCard": "[{\"text\":\"列出本周最重要的3件事\",\"time\":\"今天\",\"done\":false},{\"text\":\"今天只做第1件事，其他说\\\"不\\\"\",\"time\":\"今天\",\"done\":false},{\"text\":\"晚8点回顾：哪个瞬间忘记了时间？\",\"time\":\"20:00\",\"done\":false}]",
+      "id": "msg_1783579454719",
+      "createdAt": "2026-07-09T06:44:14.719Z"
+    }
+  ],
+  "actions": [
+    {
+      "text": "列出本周最重要的3件事",
+      "groupId": null,
+      "userId": "user_1783579429465",
+      "id": "act_1783579440388",
+      "done": false,
+      "createdAt": "2026-07-09T06:44:00.388Z"
+    },
+    {
+      "text": "今天只做第1件事，其他说\"不\"",
+      "groupId": null,
+      "userId": "user_1783579429465",
+      "id": "act_1783579440388",
+      "done": false,
+      "createdAt": "2026-07-09T06:44:00.388Z"
+    },
+    {
+      "text": "晚8点回顾：哪个瞬间忘记了时间？",
+      "groupId": null,
+      "userId": "user_1783579429465",
+      "id": "act_1783579440388",
+      "done": false,
+      "createdAt": "2026-07-09T06:44:00.388Z"
+    },
+    {
+      "text": "列出本周最重要的3件事",
+      "groupId": null,
+      "userId": "user_1783579429465",
+      "id": "act_1783579454719",
+      "done": false,
+      "createdAt": "2026-07-09T06:44:14.719Z"
+    },
+    {
+      "text": "今天只做第1件事，其他说\"不\"",
+      "groupId": null,
+      "userId": "user_1783579429465",
+      "id": "act_1783579454720",
+      "done": false,
+      "createdAt": "2026-07-09T06:44:14.720Z"
+    },
+    {
+      "text": "晚8点回顾：哪个瞬间忘记了时间？",
+      "groupId": null,
+      "userId": "user_1783579429465",
+      "id": "act_1783579454720",
+      "done": false,
+      "createdAt": "2026-07-09T06:44:14.720Z"
+    }
+  ],
+  "distillTasks": []
+}

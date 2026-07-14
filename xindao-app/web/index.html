@@ -1,0 +1,2224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>心岛 - 释放你的焦虑与孤独</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    :root {
+      --primary: #FF9A76;
+      --primary-dark: #FF7E5F;
+      --bg: #FFF8F3;
+      --text: #5D4E45;
+      --text-secondary: #8B7B6B;
+      --border: #F5EDE6;
+    }
+
+    body {
+      font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #fef6f0 0%, #fdf2eb 50%, #f8e8dc 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 20px 0;
+    }
+
+    /* ============ Phone Container ============ */
+    .phone-container {
+      width: 393px;
+      height: 852px;
+      background: #000;
+      border-radius: 60px;
+      padding: 12px;
+      box-shadow: 0 0 0 2px #1f2937, 0 20px 60px rgba(0,0,0,0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      border-radius: 48px;
+      overflow: hidden;
+      background: #fff;
+      position: relative;
+    }
+
+    .status-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: -apple-system, sans-serif;
+      z-index: 10;
+      color: #000;
+    }
+
+    .dynamic-island {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 124px;
+      height: 36px;
+      background: #000;
+      border-radius: 999px;
+      z-index: 20;
+    }
+
+    .home-indicator {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 140px;
+      height: 5px;
+      background: rgba(0,0,0,0.25);
+      border-radius: 999px;
+      z-index: 10;
+    }
+
+    /* ============ Screens Container ============ */
+    .screen {
+      position: absolute;
+      top: 54px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: none;
+      flex-direction: column;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    /* ============ Screen 1: Splash ============ */
+    .screen-splash {
+      background: linear-gradient(180deg, #FFF8F3 0%, #FFE8D6 100%);
+      padding: 80px 32px 32px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .splash-icon {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 40px;
+      box-shadow: 0 20px 60px rgba(255,126,95,0.35);
+      animation: breathe 3s ease-in-out infinite;
+    }
+
+    @keyframes breathe {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .splash-icon svg { width: 70px; height: 70px; }
+
+    .splash-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 42px;
+      color: #5D4E45;
+      margin-bottom: 16px;
+      letter-spacing: 0.2em;
+    }
+
+    .splash-tagline {
+      color: #8B7B6B;
+      font-size: 16px;
+      text-align: center;
+      line-height: 1.8;
+      margin-bottom: 60px;
+    }
+
+    .splash-btn {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);
+      border: none;
+      border-radius: 28px;
+      color: #FFF;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 30px rgba(255,126,95,0.4);
+    }
+
+    .splash-login {
+      color: #8B7B6B;
+      font-size: 14px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    /* ============ Screen 2: Register ============ */
+    .screen-register {
+      background: #FFF8F3;
+      padding: 30px 24px 24px;
+    }
+
+    .register-step {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 40px;
+    }
+
+    .step-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #E0D5CC;
+      transition: all 0.3s;
+    }
+
+    .step-dot.active {
+      width: 24px;
+      border-radius: 4px;
+      background: #FF9A76;
+    }
+
+    .register-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 26px;
+      color: #5D4E45;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .register-subtitle {
+      font-size: 14px;
+      color: #8B7B6B;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .register-form {
+      flex: 1;
+    }
+
+    .form-label {
+      font-size: 13px;
+      color: #8B7B6B;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 18px 20px;
+      font-size: 17px;
+      border: 2px solid #F0E6DE;
+      border-radius: 16px;
+      background: #FFF;
+      outline: none;
+      margin-bottom: 24px;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .form-input:focus { border-color: #FF9A76; }
+    .form-input::placeholder { color: #B8A899; }
+
+    .register-hint {
+      background: #FFF5EE;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .register-hint-icon { font-size: 20px; }
+
+    .register-hint-text {
+      font-size: 13px;
+      color: #8B7B6B;
+      line-height: 1.6;
+    }
+
+    .register-btn {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);
+      border: none;
+      border-radius: 28px;
+      color: #FFF;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 30px rgba(255,126,95,0.4);
+    }
+
+    .register-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* ============ Screen 3: Choose Advisor ============ */
+    .screen-choose {
+      background: #FFF8F3;
+      padding: 30px 24px 24px;
+    }
+
+    .choose-header { text-align: center; margin-bottom: 32px; }
+
+    .choose-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 24px;
+      color: #5D4E45;
+      margin-bottom: 8px;
+    }
+
+    .choose-subtitle { font-size: 14px; color: #8B7B6B; }
+
+    .advisor-grid {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      overflow-y: auto;
+    }
+
+    .advisor-card {
+      background: #FFF;
+      border-radius: 20px;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+    }
+
+    .advisor-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    }
+
+    .advisor-card.selected {
+      border-color: #FF9A76;
+      background: #FFF8F3;
+    }
+
+    .advisor-avatar {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      flex-shrink: 0;
+    }
+
+    .advisor-info { flex: 1; }
+
+    .advisor-name {
+      font-size: 16px;
+      color: #5D4E45;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .advisor-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    .advisor-tag {
+      font-size: 11px;
+      color: #8B7B6B;
+      background: #F5EDE6;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .advisor-check {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 2px solid #E0D5CC;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .advisor-card.selected .advisor-check {
+      background: #FF9A76;
+      border-color: #FF7E5F;
+    }
+
+    .choose-btn {
+      margin-top: 20px;
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);
+      border: none;
+      border-radius: 28px;
+      color: #FFF;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 30px rgba(255,126,95,0.4);
+    }
+
+    .choose-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .add-advisor-link {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 13px;
+      color: #8B7B6B;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    /* ============ Screen 4: Main Chat ============ */
+    .screen-chat {
+      background: #FFF;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .chat-header {
+      padding: 14px 20px;
+      background: #FFF;
+      border-bottom: 1px solid #F5EDE6;
+      flex-shrink: 0;
+    }
+
+    .chat-header-left { display: flex; align-items: center; gap: 12px; }
+
+    .chat-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .chat-info h2 { font-size: 16px; color: #5D4E45; font-weight: 600; }
+    .chat-info p { font-size: 12px; color: #8B7B6B; }
+
+    .chat-header-right { display: flex; gap: 16px; cursor: pointer; }
+    .chat-header-right svg { color: #8B7B6B; }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-height: 0;
+    }
+
+    .welcome-banner {
+      background: linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);
+      border-radius: 20px;
+      padding: 18px;
+      color: #FFF;
+      margin-bottom: 8px;
+    }
+
+    .welcome-banner-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .welcome-banner-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .welcome-banner-title { font-weight: 600; font-size: 14px; }
+    .welcome-banner-text { font-size: 14px; line-height: 1.6; opacity: 0.95; }
+
+    .action-card {
+      background: #FFF;
+      border-radius: 16px;
+      padding: 16px;
+      border: 1px solid #F5EDE6;
+    }
+
+    .action-card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .action-card-icon { font-size: 18px; }
+
+    .action-card-title {
+      font-size: 14px;
+      color: #5D4E45;
+      font-weight: 600;
+      flex: 1;
+    }
+
+    .action-card-badge {
+      background: #FFF5EE;
+      color: #FF7E5F;
+      padding: 4px 10px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .action-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid #F5EDE6;
+      cursor: pointer;
+    }
+
+    .action-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+    .action-check {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid #FF9A76;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .action-check.done {
+      background: #FF9A76;
+      border-color: #FF7E5F;
+    }
+
+    .action-item-text {
+      flex: 1;
+      font-size: 14px;
+      color: #5D4E45;
+    }
+
+    .action-item.completed .action-item-text {
+      text-decoration: line-through;
+      color: #B8A899;
+    }
+
+    .action-item-time {
+      font-size: 12px;
+      color: #B8A899;
+    }
+
+    .action-item-status { font-size: 11px; color: #FF7E5F; }
+
+    .message {
+      display: flex;
+      gap: 10px;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .message.user { flex-direction: row-reverse; }
+
+    .message-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .message-bubble {
+      max-width: 78%;
+      padding: 12px 16px;
+      border-radius: 16px;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .message.user .message-bubble {
+      background: linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);
+      color: #FFF;
+      border-bottom-right-radius: 4px;
+    }
+
+    .message.ai .message-bubble {
+      background: #F8F4F0;
+      color: #5D4E45;
+      border-bottom-left-radius: 4px;
+    }
+
+    .message-sender {
+      font-size: 11px;
+      margin-bottom: 4px;
+      margin-left: 4px;
+    }
+
+    .message.ai .message-sender { color: #8B7B6B; }
+    .message.user .message-sender { color: rgba(255,255,255,0.7); }
+
+    .message-highlight { color: #FF7E5F; font-weight: 600; }
+    .message.user .message-highlight { color: #FFE4D6; }
+
+    .action-tips {
+      background: linear-gradient(135deg, #FFF8F3 0%, #FFF5EE 100%);
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin: 0 16px 12px;
+      font-size: 12px;
+      color: #8B7B6B;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .action-tips-icon { font-size: 14px; }
+
+    .chat-bottom {
+      flex-shrink: 0;
+      padding-bottom: env(safe-area-inset-bottom, 0);
+    }
+
+    .input-row { display: flex; align-items: center; gap: 12px; }
+
+    .chat-input {
+      padding: 12px 16px;
+      background: #FFF;
+      border-top: 1px solid #F5EDE6;
+      flex-shrink: 0;
+    }
+
+    .input-box {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      background: #F8F4F0;
+      border-radius: 24px;
+      padding: 12px 16px;
+    }
+
+    .input-box input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-size: 15px;
+      color: #5D4E45;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .input-box input::placeholder { color: #B8A899; }
+
+    .voice-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(255,126,95,0.3);
+    }
+
+    .voice-btn svg { color: #FFF; }
+
+    .tab-bar {
+      height: 70px;
+      background: #FFF;
+      border-top: 1px solid #F5EDE6;
+      display: flex;
+      padding: 0 20px;
+      padding-bottom: 24px;
+      flex-shrink: 0;
+    }
+
+    .tab-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      color: #B8A899;
+      font-size: 11px;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .tab-item.active { color: #FF9A76; }
+    .tab-item svg { width: 24px; height: 24px; }
+
+    /* ============ Screen 5: Progress ============ */
+    .screen-progress {
+      background: #FFF8F3;
+    }
+
+    .progress-header {
+      padding: 14px 20px;
+      background: #FFF;
+      border-bottom: 1px solid #F5EDE6;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .progress-header h2 { font-size: 16px; color: #5D4E45; font-weight: 600; }
+
+    .progress-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 16px;
+    }
+
+    .stats-card {
+      background: #FFF;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .stats-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .stats-title { font-size: 15px; color: #5D4E45; font-weight: 600; }
+    .stats-period { font-size: 12px; color: #B8A899; }
+
+    .stats-main { display: flex; align-items: center; gap: 20px; }
+
+    .stats-circle { width: 100px; height: 100px; position: relative; }
+    .stats-circle svg { transform: rotate(-90deg); }
+
+    .circle-bg { fill: none; stroke: #F5EDE6; stroke-width: 8; }
+    .circle-fill { fill: none; stroke: #FF9A76; stroke-width: 8; stroke-linecap: round; }
+
+    .circle-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .circle-percent { font-size: 28px; font-weight: 700; color: #5D4E45; }
+    .circle-label { font-size: 11px; color: #8B7B6B; }
+
+    .stats-details { flex: 1; }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #F5EDE6;
+    }
+
+    .stat-row:last-child { border-bottom: none; }
+    .stat-label { font-size: 14px; color: #8B7B6B; }
+    .stat-value { font-size: 14px; font-weight: 600; color: #5D4E45; }
+    .stat-value.highlight { color: #FF7E5F; }
+
+    .streak-card {
+      background: #FFF;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .streak-fire {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+
+    .streak-info { flex: 1; }
+    .streak-number { font-size: 32px; font-weight: 700; color: #5D4E45; }
+    .streak-label { font-size: 13px; color: #8B7B6B; }
+
+    .streak-dots { display: flex; gap: 6px; }
+
+    .streak-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #FF9A76;
+    }
+
+    .streak-dot.inactive { background: #F5EDE6; }
+
+    .recent-card {
+      background: #FFF;
+      border-radius: 20px;
+      padding: 20px;
+    }
+
+    .recent-header {
+      font-size: 15px;
+      color: #5D4E45;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .recent-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid #F5EDE6;
+    }
+
+    .recent-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+    .recent-dot { width: 8px; height: 8px; border-radius: 50%; background: #FF9A76; }
+
+    .recent-text { flex: 1; font-size: 14px; color: #5D4E45; }
+    .recent-time { font-size: 12px; color: #B8A899; }
+
+    /* ============ Screen 6: Settings (was Distill) ============ */
+    .screen-settings {
+      background: #FFF8F3;
+      padding: 30px 24px 24px;
+    }
+
+    .settings-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .back-btn {
+      cursor: pointer;
+      color: #8B7B6B;
+    }
+
+    .settings-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 20px;
+      color: #5D4E45;
+    }
+
+    .settings-card {
+      background: #FFF;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .settings-card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #5D4E45;
+      margin-bottom: 16px;
+    }
+
+    .settings-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #F5EDE6;
+    }
+
+    .settings-item:last-child { border-bottom: none; }
+
+    .settings-item-label { font-size: 14px; color: #5D4E45; }
+    .settings-item-value { font-size: 14px; color: #8B7B6B; }
+
+    .settings-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);
+      border: none;
+      border-radius: 24px;
+      color: #FFF;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 16px;
+    }
+
+    .settings-btn.secondary {
+      background: #F5EDE6;
+      color: #5D4E45;
+    }
+
+    .key-input {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 14px;
+      border: 2px solid #F0E6DE;
+      border-radius: 12px;
+      background: #FFF;
+      outline: none;
+      font-family: inherit;
+      margin-bottom: 12px;
+    }
+
+    .key-input:focus { border-color: #FF9A76; }
+
+    .model-select {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 14px;
+      border: 2px solid #F0E6DE;
+      border-radius: 12px;
+      background: #FFF;
+      outline: none;
+      font-family: inherit;
+      margin-bottom: 16px;
+      cursor: pointer;
+    }
+
+    .key-status {
+      font-size: 12px;
+      color: #8B7B6B;
+      margin-bottom: 16px;
+    }
+
+    .key-status.configured { color: #4CAF50; }
+
+    /* Typing indicator */
+    .typing {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 0;
+    }
+
+    .typing-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #8B7B6B;
+      animation: typing 1.4s infinite;
+    }
+
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typing {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+      30% { transform: translateY(-4px); opacity: 1; }
+    }
+
+    /* Toast */
+    .toast {
+      position: absolute;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(0,0,0,0.8);
+      color: #FFF;
+      padding: 12px 24px;
+      border-radius: 24px;
+      font-size: 14px;
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 100;
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Tab bar dark variant */
+    /* Tab bar dark variant */
+    .tab-bar-dark {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: #FFF;
+      border-top: 1px solid #F5EDE6;
+      display: flex;
+      padding: 0 20px;
+      padding-bottom: 24px;
+    }
+
+    /* ============ Screen 6: Distill ============ */
+    .screen-distill {
+      background: #FFF8F3;
+      padding: 30px 24px 24px;
+    }
+
+    .distill-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .distill-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 36px;
+    }
+
+    .distill-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 24px;
+      color: #5D4E45;
+      margin-bottom: 8px;
+    }
+
+    .distill-subtitle {
+      font-size: 14px;
+      color: #8B7B6B;
+      line-height: 1.6;
+    }
+
+    .distill-form {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .distill-input {
+      width: 100%;
+      padding: 18px 20px;
+      font-size: 16px;
+      border: 2px solid #F0E6DE;
+      border-radius: 16px;
+      background: #FFF;
+      outline: none;
+      margin-bottom: 16px;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .distill-input:focus { border-color: #FF9A76; }
+    .distill-input::placeholder { color: #B8A899; }
+
+    .distill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .distill-tag {
+      padding: 8px 14px;
+      background: #FFF;
+      border: 1px solid #F5EDE6;
+      border-radius: 20px;
+      font-size: 13px;
+      color: #8B7B6B;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .distill-tag.selected {
+      background: #FFF5EE;
+      border-color: #FF9A76;
+      color: #FF7E5F;
+    }
+
+    .distill-preview {
+      background: #FFF;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 24px;
+    }
+
+    .distill-preview-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .distill-preview-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #F5EDE6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .distill-preview-info { flex: 1; }
+
+    .distill-preview-name {
+      font-size: 15px;
+      color: #5D4E45;
+      font-weight: 600;
+    }
+
+    .distill-preview-status {
+      font-size: 12px;
+      color: #8B7B6B;
+    }
+
+    .distill-preview-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    .distill-btn {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, #FF9A76 0%, #FF7E5F 100%);
+      border: none;
+      border-radius: 28px;
+      color: #FFF;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 30px rgba(255,126,95,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .distill-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .distill-hint {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 12px;
+      color: #B8A899;
+    }
+
+    .distill-progress {
+      background: #FFF;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .distill-progress-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      animation: pulse 1s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+
+    .distill-progress-text {
+      font-size: 14px;
+      color: #5D4E45;
+      margin-bottom: 8px;
+    }
+
+    .distill-progress-bar {
+      height: 4px;
+      background: #F5EDE6;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .distill-progress-fill {
+      height: 100%;
+      background: linear-gradient(135deg, #FF9A76, #FF7E5F);
+      border-radius: 2px;
+      transition: width 0.3s;
+    }
+
+    .distill-success {
+      background: #FFF;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .distill-success-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .distill-success-name {
+      font-size: 18px;
+      font-weight: 600;
+      color: #5D4E45;
+      margin-bottom: 8px;
+    }
+
+    .distill-success-text {
+      font-size: 14px;
+      color: #8B7B6B;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="phone-container">
+    <div class="phone-screen">
+      <div class="status-bar">
+        <span id="status-time">9:41</span>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="display:flex;align-items:flex-end;gap:2px;height:12px;">
+            <div style="width:3px;height:4px;background:currentColor;border-radius:1px;"></div>
+            <div style="width:3px;height:6px;background:currentColor;border-radius:1px;"></div>
+            <div style="width:3px;height:9px;background:currentColor;border-radius:1px;"></div>
+            <div style="width:3px;height:11px;background:currentColor;border-radius:1px;"></div>
+          </div>
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none" style="color:#000">
+            <path d="M8 11.5a1 1 0 100-2 1 1 0 000 2z" fill="currentColor"/>
+            <path d="M3 7.5a7 7 0 0110 0" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+          </svg>
+          <div style="width:26px;height:12px;border:1.5px solid currentColor;border-radius:3px;padding:1px;position:relative;">
+            <div style="width:75%;height:100%;background:currentColor;border-radius:1px;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="dynamic-island"></div>
+
+      <!-- Screen 1: Splash -->
+      <div class="screen screen-splash active" id="screen-splash">
+        <div class="splash-icon">
+          <svg viewBox="0 0 60 60" fill="none">
+            <path d="M30 8C30 8 18 18 18 30C18 42 30 52 30 52C30 52 42 42 42 30C42 18 30 8 30 8Z" fill="#FFF" fill-opacity="0.9"/>
+            <path d="M22 54C22 54 10 50 6 56C6 56 14 62 22 58" fill="#FFF" fill-opacity="0.6"/>
+            <path d="M38 54C38 54 50 50 54 56C54 56 46 62 38 58" fill="#FFF" fill-opacity="0.6"/>
+          </svg>
+        </div>
+        <h1 class="splash-title">心岛</h1>
+        <p class="splash-tagline">释放你的焦虑与孤独<br/>在这里，你不再是一个人</p>
+        <button class="splash-btn" onclick="goToScreen('screen-register')">开始探索</button>
+        <span class="splash-login" onclick="goToScreen('screen-register')">已有账号？直接进入</span>
+      </div>
+
+      <!-- Screen 2: Register -->
+      <div class="screen screen-register" id="screen-register">
+        <div class="register-step">
+          <div class="step-dot active" id="step-1"></div>
+          <div class="step-dot" id="step-2"></div>
+          <div class="step-dot" id="step-3"></div>
+        </div>
+
+        <div id="step-1-view" style="display:flex; flex-direction:column; flex:1;">
+          <h2 class="register-title">给自己起个名字</h2>
+          <p class="register-subtitle">这是你在心岛的身份标识</p>
+
+          <div class="register-form" style="flex:1; display:flex; flex-direction:column;">
+            <label class="form-label">昵称</label>
+            <input type="text" class="form-input" id="nickname-input" placeholder="比如：小明、Alex、阿花" maxlength="8">
+
+            <div class="register-hint">
+              <span class="register-hint-icon">💡</span>
+              <p class="register-hint-text">一个好记的名字能让你更快融入心岛。也可以用英文名或昵称，重要的是你喜欢。</p>
+            </div>
+
+            <label class="form-label">一句话介绍自己（选填）</label>
+            <input type="text" class="form-input" id="bio-input" placeholder="比如：正在创业的产品经理" maxlength="20">
+
+            <div style="margin-top:auto; padding-top:16px;">
+              <button class="register-btn" id="next-btn" onclick="goToStep(2)" disabled>下一步 →</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="step-2-view" style="display:none; flex:1; flex-direction:column;">
+          <div class="choose-header">
+            <h2 class="choose-title">选一位专属智者</h2>
+            <p class="choose-subtitle">他将陪你思考、帮你决策，只选一位</p>
+          </div>
+
+          <div class="advisor-grid" id="advisor-grid"></div>
+
+          <button class="choose-btn" id="choose-btn" onclick="finishSetup()" disabled>开始心岛之旅 →</button>
+
+          <div class="add-advisor-link" onclick="goToScreen('screen-settings')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            想添加其他智者？蒸馏一个新角色
+          </div>
+        </div>
+
+        <div id="step-3-view" style="display:none; flex:1; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+          <div style="font-size:64px;margin-bottom:24px;">🏝️</div>
+          <h2 style="font-family:'Noto Serif SC',serif;font-size:24px;color:#5D4E45;margin-bottom:12px;">欢迎来到心岛！</h2>
+          <p style="color:#8B7B6B;margin-bottom:32px;">你的专属智者 <span id="chosen-advisor-name" style="color:#FF7E5F;font-weight:600;"></span> 已就位</p>
+          <button class="register-btn" style="width:200px;" onclick="enterApp()">进入心岛</button>
+        </div>
+      </div>
+
+      <!-- Screen 3: Chat (Main) -->
+      <div class="screen screen-chat" id="screen-chat">
+        <div class="chat-header">
+          <div class="chat-header-left">
+            <div class="chat-avatar" id="chat-avatar" style="background:#FFE4D6;">🌊</div>
+            <div class="chat-info">
+              <h2 id="chat-advisor-name">@Naval</h2>
+              <p>你的专属智者</p>
+            </div>
+          </div>
+          <div class="chat-header-right" onclick="goToScreen('screen-settings')">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="chat-messages" id="chat-messages">
+          <div class="welcome-banner">
+            <div class="welcome-banner-header">
+              <div class="welcome-banner-avatar">🏝️</div>
+              <span class="welcome-banner-title">欢迎来到心岛</span>
+            </div>
+            <p class="welcome-banner-text" id="welcome-text">Hi 小明，你的专属智者 Naval 已就位。无论生活、工作还是感情上的困惑，都可以和他聊聊。</p>
+          </div>
+        </div>
+
+        <div class="chat-bottom">
+          <div class="action-tips">
+            <span class="action-tips-icon">💡</span>
+            <span>和智者聊完会自动生成行动卡，每日提醒执行，直到完成</span>
+          </div>
+
+          <div class="chat-input">
+            <div class="input-row">
+              <div class="input-box">
+                <input type="text" id="message-input" placeholder="问 @智者 任何问题..." onkeypress="handleKeypress(event)">
+              </div>
+              <button class="voice-btn" onclick="sendMessage()">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFF" stroke-width="2">
+                  <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Tab Bar -->
+          <div class="tab-bar" id="main-tab-bar">
+            <div class="tab-item active" data-tab="chat" onclick="switchTab('chat')">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+              </svg>
+              <span>聊天</span>
+            </div>
+            <div class="tab-item" data-tab="progress" onclick="switchTab('progress')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+              <span>进度</span>
+            </div>
+            <div class="tab-item" data-tab="distill" onclick="switchTab('distill')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+              </svg>
+              <span>蒸馏</span>
+            </div>
+            <div class="tab-item" data-tab="settings" onclick="switchTab('settings')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+              </svg>
+              <span>设置</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screen 4: Progress -->
+      <div class="screen screen-progress" id="screen-progress">
+        <div class="progress-header">
+          <svg class="back-btn" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8B7B6B" stroke-width="2" onclick="goToScreen('screen-chat')">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+          <h2>我的进度</h2>
+        </div>
+
+        <div class="progress-content">
+          <div class="stats-card">
+            <div class="stats-header">
+              <span class="stats-title">本周行动完成率</span>
+              <span class="stats-period" id="week-label">6月第三周</span>
+            </div>
+            <div class="stats-main">
+              <div class="stats-circle">
+                <svg width="100" height="100" viewBox="0 0 100 100">
+                  <circle class="circle-bg" cx="50" cy="50" r="42"/>
+                  <circle class="circle-fill" cx="50" cy="50" r="42" id="progress-circle"/>
+                </svg>
+                <div class="circle-text">
+                  <div class="circle-percent" id="progress-percent">0%</div>
+                  <div class="circle-label">完成率</div>
+                </div>
+              </div>
+              <div class="stats-details">
+                <div class="stat-row">
+                  <span class="stat-label">已完成</span>
+                  <span class="stat-value highlight" id="stat-done">0</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">进行中</span>
+                  <span class="stat-value" id="stat-progress">0</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">未开始</span>
+                  <span class="stat-value" id="stat-todo">0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="streak-card">
+            <div class="streak-fire">🔥</div>
+            <div class="streak-info">
+              <div class="streak-number" id="streak-count">0</div>
+              <div class="streak-label">天连续行动</div>
+            </div>
+            <div class="streak-dots" id="streak-dots"></div>
+          </div>
+
+          <div class="recent-card">
+            <div class="recent-header">最近完成</div>
+            <div id="recent-list"></div>
+          </div>
+        </div>
+
+        <div class="tab-bar-dark">
+          <div class="tab-item" onclick="goToScreen('screen-chat')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+            </svg>
+            <span>聊天</span>
+          </div>
+          <div class="tab-item active">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            <span>进度</span>
+          </div>
+          <div class="tab-item" onclick="goToScreen('screen-distill')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+            <span>蒸馏</span>
+          </div>
+          <div class="tab-item" onclick="goToScreen('screen-settings')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+            </svg>
+            <span>设置</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screen 5: Distill -->
+      <div class="screen screen-distill" id="screen-distill">
+        <div class="distill-header">
+          <div class="distill-icon">🧪</div>
+          <h2 class="distill-title">蒸馏新智者</h2>
+          <p class="distill-subtitle">把任何你欣赏的人蒸馏成AI智者<br/>加入你的专属智囊团</p>
+        </div>
+
+        <div class="distill-form" id="distill-form">
+          <input type="text" class="distill-input" id="distill-name-input" placeholder="输入你想蒸馏的人名" value="">
+
+          <div class="distill-tags" id="distill-tags">
+            <span class="distill-tag selected" data-tag="创业">🚀 创业</span>
+            <span class="distill-tag selected" data-tag="创新">💡 创新</span>
+            <span class="distill-tag" data-tag="投资">💰 投资</span>
+            <span class="distill-tag" data-tag="设计">🎨 设计</span>
+            <span class="distill-tag" data-tag="学习">📚 学习</span>
+            <span class="distill-tag" data-tag="职场">💼 职场</span>
+          </div>
+
+          <div class="distill-preview" id="distill-preview" style="display:none;">
+            <div class="distill-preview-header">
+              <div class="distill-preview-avatar" id="distill-preview-avatar">👤</div>
+              <div class="distill-preview-info">
+                <p class="distill-preview-name" id="distill-preview-name"></p>
+                <p class="distill-preview-status">即将加入你的智囊团</p>
+              </div>
+            </div>
+            <div class="distill-preview-tags" id="distill-preview-tags"></div>
+          </div>
+
+          <button class="distill-btn" id="distill-btn" onclick="startDistill()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+            开始蒸馏
+          </button>
+
+          <p class="distill-hint">蒸馏需要3-5分钟，基于公开信息深度调研</p>
+        </div>
+
+        <div class="distill-progress" id="distill-progress" style="display:none;">
+          <div class="distill-progress-icon">🧪</div>
+          <p class="distill-progress-text" id="distill-progress-text">正在分析中...</p>
+          <div class="distill-progress-bar">
+            <div class="distill-progress-fill" id="distill-progress-fill" style="width:0%"></div>
+          </div>
+        </div>
+
+        <div class="distill-success" id="distill-success" style="display:none;">
+          <div class="distill-success-icon">🎉</div>
+          <p class="distill-success-name" id="distill-success-name"></p>
+          <p class="distill-success-text">已加入你的智囊团！</p>
+          <button class="settings-btn" style="margin-top:16px;" onclick="goToScreen('screen-chat')">开始对话</button>
+        </div>
+
+        <div class="tab-bar-dark">
+          <div class="tab-item" onclick="goToScreen('screen-chat')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+            </svg>
+            <span>聊天</span>
+          </div>
+          <div class="tab-item" onclick="goToScreen('screen-progress')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            <span>进度</span>
+          </div>
+          <div class="tab-item active">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+            <span>蒸馏</span>
+          </div>
+          <div class="tab-item" onclick="goToScreen('screen-settings')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+            </svg>
+            <span>设置</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screen 5: Settings -->
+      <div class="screen screen-settings" id="screen-settings">
+        <div class="settings-header">
+          <svg class="back-btn" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8B7B6B" stroke-width="2" onclick="goToScreen('screen-chat')">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+          <span class="settings-title">设置</span>
+        </div>
+
+        <div style="flex:1; overflow-y:auto;">
+          <div class="settings-card">
+            <div class="settings-card-title">🔑 API Key 配置</div>
+            <input type="password" class="key-input" id="api-key-input" placeholder="填入你的 OpenAI API Key">
+            <select class="model-select" id="model-select">
+              <option value="gpt-4o-mini">GPT-4o Mini (推荐)</option>
+              <option value="gpt-4o">GPT-4o (更强)</option>
+              <option value="gpt-3.5-turbo">GPT-3.5 Turbo (便宜)</option>
+            </select>
+            <p class="key-status" id="key-status">未配置 · 将使用内置 Mock 回复</p>
+            <button class="settings-btn" onclick="saveApiKey()">保存 API Key</button>
+          </div>
+
+          <div class="settings-card">
+            <div class="settings-card-title">🧙 切换智者</div>
+            <div id="advisor-switch-list"></div>
+          </div>
+
+          <div class="settings-card">
+            <div class="settings-card-title">📊 当前状态</div>
+            <div class="settings-item">
+              <span class="settings-item-label">用户</span>
+              <span class="settings-item-value" id="current-nickname">-</span>
+            </div>
+            <div class="settings-item">
+              <span class="settings-item-label">专属智者</span>
+              <span class="settings-item-value" id="current-advisor">-</span>
+            </div>
+            <div class="settings-item">
+              <span class="settings-item-label">对话数</span>
+              <span class="settings-item-value" id="message-count">0</span>
+            </div>
+          </div>
+
+          <button class="settings-btn secondary" onclick="clearAllData()">清除所有数据</button>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ============ Advisors Data ============
+    const ADVISORS = [
+      { id: 'naval', name: 'Naval', emoji: '🌊', color: '#FFE4D6', tags: ['财富', '幸福', '人生哲学'],
+        prompt: '你是Naval Ravikant，简洁有力，直击要害，善用比喻，强调选择和心态。回复不超过150字。' },
+      { id: 'pg', name: '保罗·格雷厄姆', emoji: '💼', color: '#D6E8F0', tags: ['创业', '职场', '写作'],
+        prompt: '你是保罗·格雷厄姆，逻辑严密，善于分析，鼓励创业，重视写作和表达能力，务实直接。回复不超过150字。' },
+      { id: 'feynman', name: '费曼', emoji: '🔬', color: '#E8DFF0', tags: ['学习', '科学思维'],
+        prompt: '你是理查德·费曼，化繁为简，幽默风趣，用简单语言解释复杂问题，鼓励动手实践和好奇心。回复不超过150字。' },
+      { id: 'zhang', name: '张一鸣', emoji: '📱', color: '#DFF0E8', tags: ['产品', '全球化'],
+        prompt: '你是张一鸣，数据驱动，理性决策，追求极致效率和执行力，低调务实。回复不超过150字。' },
+      { id: 'mrbeast', name: 'MrBeast', emoji: '🎬', color: '#F0EBD6', tags: ['内容创作', '流量'],
+        prompt: '你是MrBeast，充满激情和正能量，敢于做别人不敢做的事，幽默接地气。回复不超过150字。' }
+    ];
+
+    const SAMPLE_ACTIONS = [
+      { text: '列出本周最重要的3件事', time: '今天' },
+      { text: '今天只做第1件事，其他说"不"', time: '今天' },
+      { text: '晚8点回顾：哪个瞬间忘记了时间？', time: '20:00' },
+      { text: '写下你真正想要的1件事', time: '今天' },
+      { text: '拒绝一个不重要的请求', time: '今天' }
+    ];
+
+    // ============ State ============
+    let state = {
+      user: null,
+      advisor: null,
+      messages: [],
+      actions: [],
+      stats: { done: 0, progress: 0 },
+      streak: 0
+    };
+
+    // ============ API Config ============
+    let API_KEY = localStorage.getItem('xindao_api_key') || '';
+    let AI_MODEL = localStorage.getItem('xindao_model') || 'gpt-4o-mini';
+
+    // ============ Utils ============
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2000);
+    }
+
+    function updateTime() {
+      const now = new Date();
+      document.getElementById('status-time').textContent =
+        now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+    }
+
+    function saveState() {
+      localStorage.setItem('xindao_state', JSON.stringify(state));
+    }
+
+    function loadState() {
+      const s = localStorage.getItem('xindao_state');
+      if (s) {
+        state = JSON.parse(s);
+        return true;
+      }
+      return false;
+    }
+
+    function formatTime(d) {
+      return new Date(d).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    // ============ Navigation ============
+    function goToScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(screenId).classList.add('active');
+
+      if (screenId === 'screen-chat') {
+        renderChat();
+        updateStats();
+      }
+      if (screenId === 'screen-progress') {
+        renderProgress();
+      }
+      if (screenId === 'screen-settings') {
+        updateSettingsInfo();
+        renderAdvisorSwitch();
+      }
+      if (screenId === 'screen-distill') {
+        initDistill();
+      }
+      if (screenId === 'screen-register') {
+        initRegister();
+      }
+    }
+
+    // ============ Register Flow ============
+    function initRegister() {
+      if (loadState() && state.user && state.advisor) {
+        enterApp();
+        return;
+      }
+
+      state.currentStep = 1;
+      updateStepIndicator();
+
+      document.getElementById('step-1-view').style.display = 'flex';
+      document.getElementById('step-2-view').style.display = 'none';
+      document.getElementById('step-3-view').style.display = 'none';
+
+      document.getElementById('nickname-input').addEventListener('input', function() {
+        document.getElementById('next-btn').disabled = this.value.trim().length === 0;
+      });
+
+      renderAdvisorGrid();
+    }
+
+    function updateStepIndicator() {
+      for (let i = 1; i <= 3; i++) {
+        const dot = document.getElementById('step-' + i);
+        dot.classList.toggle('active', i === state.currentStep);
+      }
+    }
+
+    function goToStep(step) {
+      if (step === 2) {
+        state.user = {
+          nickname: document.getElementById('nickname-input').value.trim(),
+          bio: document.getElementById('bio-input').value.trim()
+        };
+      }
+
+      state.currentStep = step;
+      updateStepIndicator();
+
+      document.getElementById('step-1-view').style.display = step === 1 ? 'flex' : 'none';
+      document.getElementById('step-2-view').style.display = step === 2 ? 'flex' : 'none';
+      document.getElementById('step-3-view').style.display = step === 3 ? 'flex' : 'none';
+
+      if (step === 3) {
+        const advisor = ADVISORS.find(a => a.id === state.advisor);
+        document.getElementById('chosen-advisor-name').textContent = advisor?.name || '';
+      }
+    }
+
+    function renderAdvisorGrid() {
+      const grid = document.getElementById('advisor-grid');
+      grid.innerHTML = ADVISORS.map(a => `
+        <div class="advisor-card ${state.advisor === a.id ? 'selected' : ''}" data-id="${a.id}" onclick="selectAdvisor('${a.id}')">
+          <div class="advisor-avatar" style="background:${a.color};">${a.emoji}</div>
+          <div class="advisor-info">
+            <p class="advisor-name">${a.name}</p>
+            <div class="advisor-tags">
+              ${a.tags.map(t => `<span class="advisor-tag">${t}</span>`).join('')}
+            </div>
+          </div>
+          <div class="advisor-check">
+            ${state.advisor === a.id ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFF" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>' : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function selectAdvisor(id) {
+      state.advisor = id;
+      renderAdvisorGrid();
+      document.getElementById('choose-btn').disabled = false;
+    }
+
+    function finishSetup() {
+      state.actions = [...SAMPLE_ACTIONS];
+      state.streak = 3;
+      saveState();
+      goToStep(3);
+    }
+
+    function enterApp() {
+      const advisor = ADVISORS.find(a => a.id === state.advisor);
+
+      // Update chat header
+      document.getElementById('chat-avatar').style.background = advisor?.color || '#FFE4D6';
+      document.getElementById('chat-avatar').textContent = advisor?.emoji || '🌊';
+      document.getElementById('chat-advisor-name').textContent = '@' + (advisor?.name || '智者');
+
+      // Update welcome text
+      document.getElementById('welcome-text').textContent =
+        `Hi ${state.user?.nickname || ''}，你的专属智者 ${advisor?.name || '智者'} 已就位。无论生活、工作还是感情上的困惑，都可以和他聊聊。`;
+
+      goToScreen('screen-chat');
+    }
+
+    // ============ Chat ============
+    function renderChat() {
+      const container = document.getElementById('chat-messages');
+      const advisor = ADVISORS.find(a => a.id === state.advisor);
+
+      let html = '';
+
+      if (state.messages.length === 0) {
+        html += `
+          <div class="welcome-banner">
+            <div class="welcome-banner-header">
+              <div class="welcome-banner-avatar">🏝️</div>
+              <span class="welcome-banner-title">欢迎来到心岛</span>
+            </div>
+            <p class="welcome-banner-text">Hi ${state.user?.nickname || ''}，你的专属智者 ${advisor?.name || '智者'} 已就位。无论生活、工作还是感情上的困惑，都可以和他聊聊。</p>
+          </div>
+        `;
+      }
+
+      // Render messages
+      state.messages.forEach(m => {
+        const isUser = m.role === 'user';
+        const avatar = isUser ? null : (m.advisorColor ? { bg: m.advisorColor, emoji: m.advisorEmoji } : null);
+
+        html += `
+          <div class="message ${m.role}">
+            <div class="message-avatar" style="background:${avatar ? avatar.bg : 'linear-gradient(135deg, #FF9A76, #FF7E5F)'};">
+              ${avatar ? avatar.emoji : '👤'}
+            </div>
+            <div class="message-bubble">
+              <p class="message-sender">${isUser ? state.user?.nickname : '@' + (m.advisorName || advisor?.name)} · ${formatTime(m.createdAt)}</p>
+              ${m.content}
+            </div>
+          </div>
+        `;
+      });
+
+      // Render action card if exists
+      if (state.latestActions && state.latestActions.length > 0) {
+        html += `
+          <div class="action-card">
+            <div class="action-card-header">
+              <span class="action-card-icon">🎯</span>
+              <span class="action-card-title">今日行动</span>
+              <span class="action-card-badge">新鲜生成</span>
+            </div>
+            ${state.latestActions.map((a, i) => `
+              <div class="action-item ${a.done ? 'completed' : ''}" onclick="toggleAction(${i})">
+                <div class="action-check ${a.done ? 'done' : ''}">
+                  ${a.done ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFF" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>' : ''}
+                </div>
+                <span class="action-item-text">${a.text}</span>
+                <span class="action-item-time">⏰ ${a.time}</span>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      container.innerHTML = html;
+      container.scrollTop = container.scrollHeight;
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById('message-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const advisor = ADVISORS.find(a => a.id === state.advisor);
+      const now = new Date().toISOString();
+
+      // Add user message
+      state.messages.push({
+        role: 'user',
+        content: text,
+        createdAt: now
+      });
+      input.value = '';
+      renderChat();
+
+      // Show typing
+      const container = document.getElementById('chat-messages');
+      container.insertAdjacentHTML('beforeend', `
+        <div class="message ai" id="typing-msg">
+          <div class="message-avatar" style="background:${advisor?.color};">${advisor?.emoji}</div>
+          <div class="message-bubble">
+            <div class="typing">
+              <span class="typing-dot"></span>
+              <span class="typing-dot"></span>
+              <span class="typing-dot"></span>
+            </div>
+          </div>
+        </div>
+      `);
+      container.scrollTop = container.scrollHeight;
+
+      // Get AI response
+      let response;
+      if (API_KEY) {
+        response = await callOpenAI(text, advisor?.prompt || '');
+      } else {
+        await new Promise(r => setTimeout(r, 1500));
+        response = generateMockResponse(text, advisor?.name || '');
+      }
+
+      // Remove typing
+      document.getElementById('typing-msg')?.remove();
+
+      // Add AI message
+      state.messages.push({
+        role: 'ai',
+        content: response,
+        advisorName: advisor?.name,
+        advisorEmoji: advisor?.emoji,
+        advisorColor: advisor?.color,
+        createdAt: new Date().toISOString()
+      });
+
+      // Generate actions
+      state.latestActions = generateActions(text);
+      state.actions = [...state.latestActions.map(a => ({...a, done: false})), ...state.actions];
+
+      saveState();
+      renderChat();
+      showToast('行动卡已更新 ✨');
+    }
+
+    async function callOpenAI(userMessage, systemPrompt) {
+      try {
+        const res = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${API_KEY}`
+          },
+          body: JSON.stringify({
+            model: AI_MODEL,
+            messages: [
+              { role: 'system', content: systemPrompt || '你是一位智者，用温暖的口吻帮助用户。回复不超过150字。' },
+              { role: 'user', content: userMessage }
+            ],
+            max_tokens: 300,
+            temperature: 0.8
+          })
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.error?.message || 'API 调用失败');
+        }
+
+        const data = await res.json();
+        return data.choices[0].message.content
+          .replace(/\n/g, '<br/>')
+          .replace(/\*\*(.*?)\*\*/g, '<span class="message-highlight">$1</span>');
+      } catch (e) {
+        console.error('OpenAI Error:', e);
+        showToast('AI 响应失败，切换到 Mock 模式');
+        return generateMockResponse(userMessage, state.advisor?.name || '');
+      }
+    }
+
+    function generateMockResponse(userMessage, advisorName) {
+      const lower = userMessage.toLowerCase();
+
+      if (lower.includes('焦虑') || lower.includes('压力')) {
+        return `${advisorName}：<br><br>焦虑来自于<span class="message-highlight">对不确定性的恐惧</span>。但事实是，未来本来就不确定。<br><br>你可以尝试：<br>1. 把焦虑写下来，看着它<br>2. 问自己：最坏的情况是什么？能承受吗？<br>3. 专注当下能做的事`;
+      }
+      if (lower.includes('选择') || lower.includes('纠结')) {
+        return `${advisorName}：<br><br>选择困难往往是因为<span class="message-highlight">想太多选项</span>。<br><br>试试：问自己——如果这是我人生的最后一天，我会选哪个？<br><br>那个答案，通常就是你真正想要的。`;
+      }
+      if (lower.includes('精力') || lower.includes('累')) {
+        return `${advisorName}：<br><br>精力管理不是时间管理，是<span class="message-highlight">选择管理</span>。<br><br>你同时想做3件事，说明还没有确定哪件事是<span class="message-highlight">真正重要的</span>。<br><br>哪件事做起来你会忘记时间？那个就是你的答案。`;
+      }
+      if (lower.includes('创业') || lower.includes('工作')) {
+        return `${advisorName}：<br><br>建议是：<br>1. <span class="message-highlight">行动胜于完美</span>——不要等准备好了再开始<br>2. 小步快跑，快速验证<br>3. 找到你的独特优势`;
+      }
+      if (lower.includes('学习') || lower.includes('读书')) {
+        return `${advisorName}：<br><br>学习的关键不是记忆，是<span class="message-highlight">理解</span>。<br><br>费曼学习法：<br>1. 选一个概念<br>2. 用简单的话解释给10岁小孩听<br>3. 哪里卡住了，就回去学`;
+      }
+
+      return `${advisorName}：<br><br>谢谢你的提问。这是个值得深思的问题。<br><br>建议是：<br>1. <span class="message-highlight">明确你的核心目标</span><br>2. 考虑你现在拥有的资源和限制<br>3. 记住：行动比完美更重要`;
+    }
+
+    function generateActions(message) {
+      const lower = message.toLowerCase();
+      const actions = [];
+
+      if (lower.includes('焦虑') || lower.includes('压力')) {
+        actions.push({ text: '把焦虑写下来，看着它', time: '今天' });
+        actions.push({ text: '晚8点冥想10分钟', time: '20:00' });
+      } else if (lower.includes('精力') || lower.includes('累')) {
+        actions.push({ text: '列出让你忘记时间的事', time: '今天' });
+        actions.push({ text: '今天对2件事说"不"', time: '今天' });
+      } else if (lower.includes('选择') || lower.includes('纠结')) {
+        actions.push({ text: '写下两个选项的利弊', time: '今天' });
+        actions.push({ text: '问朋友会怎么选', time: '今天' });
+      } else {
+        actions.push({ text: '列出本周最重要的3件事', time: '今天' });
+        actions.push({ text: '今天只做第1件事，其他说"不"', time: '今天' });
+      }
+
+      actions.push({ text: '晚8点回顾：哪个瞬间忘记了时间？', time: '20:00' });
+
+      return actions.map(a => ({ ...a, done: false }));
+    }
+
+    function handleKeypress(e) {
+      if (e.key === 'Enter') sendMessage();
+    }
+
+    function toggleAction(index) {
+      if (state.latestActions && state.latestActions[index]) {
+        state.latestActions[index].done = !state.latestActions[index].done;
+        updateStats();
+        saveState();
+        renderChat();
+        if (state.latestActions[index].done) showToast('任务完成！🎉');
+      }
+    }
+
+    // ============ Stats ============
+    function updateStats() {
+      const all = state.actions || [];
+      const done = all.filter(a => a.done).length;
+      state.stats = { done, progress: all.length - done };
+    }
+
+    function renderProgress() {
+      const total = state.actions?.length || 1;
+      const done = state.actions?.filter(a => a.done).length || 0;
+      const percent = Math.round((done / total) * 100);
+
+      const circle = document.getElementById('progress-circle');
+      const circumference = 2 * Math.PI * 42;
+      circle.style.strokeDasharray = circumference;
+      circle.style.strokeDashoffset = circumference - (percent / 100) * circumference;
+
+      document.getElementById('progress-percent').textContent = percent + '%';
+      document.getElementById('stat-done').textContent = done;
+      document.getElementById('stat-progress').textContent = state.actions?.filter(a => !a.done).length || 0;
+
+      document.getElementById('streak-count').textContent = state.streak || 0;
+
+      const streakDots = document.getElementById('streak-dots');
+      streakDots.innerHTML = Array.from({length: 7}, (_, i) =>
+        `<span class="streak-dot ${i < (state.streak % 7) ? '' : 'inactive'}"></span>`
+      ).join('');
+
+      const recent = state.actions?.filter(a => a.done).slice(0, 5) || [];
+      document.getElementById('recent-list').innerHTML = recent.length ? recent.map(a => `
+        <div class="recent-item">
+          <span class="recent-dot"></span>
+          <span class="recent-text">${a.text}</span>
+          <span class="recent-time">${a.time}</span>
+        </div>
+      `).join('') : '<p style="color:#8B7B6B;font-size:13px;text-align:center;padding:20px;">还没有完成的任务</p>';
+
+      const now = new Date();
+      document.getElementById('week-label').textContent =
+        `${now.getMonth() + 1}月第${Math.ceil(now.getDate() / 7)}周`;
+    }
+
+    // ============ Settings ============
+    function updateSettingsInfo() {
+      document.getElementById('api-key-input').value = API_KEY;
+      document.getElementById('model-select').value = AI_MODEL;
+
+      const statusEl = document.getElementById('key-status');
+      if (API_KEY) {
+        statusEl.textContent = '✓ 已配置 · 使用真正的 AI 回复';
+        statusEl.classList.add('configured');
+      } else {
+        statusEl.textContent = '未配置 · 将使用内置 Mock 回复';
+        statusEl.classList.remove('configured');
+      }
+
+      const advisor = ADVISORS.find(a => a.id === state.advisor);
+      document.getElementById('current-nickname').textContent = state.user?.nickname || '-';
+      document.getElementById('current-advisor').textContent = advisor?.name || '-';
+      document.getElementById('message-count').textContent = state.messages.filter(m => m.role === 'user').length;
+    }
+
+    function renderAdvisorSwitch() {
+      const list = document.getElementById('advisor-switch-list');
+      list.innerHTML = ADVISORS.map(a => `
+        <div class="advisor-card ${state.advisor === a.id ? 'selected' : ''}" data-id="${a.id}" onclick="switchAdvisor('${a.id}')">
+          <div class="advisor-avatar" style="background:${a.color};">${a.emoji}</div>
+          <div class="advisor-info">
+            <p class="advisor-name">${a.name}</p>
+            <div class="advisor-tags">
+              ${a.tags.map(t => `<span class="advisor-tag">${t}</span>`).join('')}
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function switchAdvisor(id) {
+      state.advisor = id;
+      saveState();
+      renderAdvisorSwitch();
+
+      const advisor = ADVISORS.find(a => a.id === id);
+      document.getElementById('current-advisor').textContent = advisor?.name || '-';
+
+      // Update chat header
+      document.getElementById('chat-avatar').style.background = advisor?.color || '#FFE4D6';
+      document.getElementById('chat-avatar').textContent = advisor?.emoji || '🌊';
+      document.getElementById('chat-advisor-name').textContent = '@' + (advisor?.name || '智者');
+
+      showToast(`已切换到 ${advisor?.name}`);
+    }
+
+    function saveApiKey() {
+      API_KEY = document.getElementById('api-key-input').value.trim();
+      AI_MODEL = document.getElementById('model-select').value;
+      localStorage.setItem('xindao_api_key', API_KEY);
+      localStorage.setItem('xindao_model', AI_MODEL);
+      updateSettingsInfo();
+      showToast(API_KEY ? 'API Key 已保存 ✨' : '已清除，使用 Mock 模式');
+    }
+
+    function clearAllData() {
+      if (confirm('确定要清除所有数据吗？这将重置你的账号和进度。')) {
+        localStorage.removeItem('xindao_state');
+        location.reload();
+      }
+    }
+
+    function switchTab(tab) {
+      if (tab === 'progress') {
+        goToScreen('screen-progress');
+      } else if (tab === 'distill') {
+        goToScreen('screen-distill');
+        initDistill();
+      } else if (tab === 'settings') {
+        goToScreen('screen-settings');
+      } else {
+        goToScreen('screen-chat');
+      }
+    }
+
+    // ============ Distill ============
+    function initDistill() {
+      document.getElementById('distill-form').style.display = 'flex';
+      document.getElementById('distill-progress').style.display = 'none';
+      document.getElementById('distill-success').style.display = 'none';
+      document.getElementById('distill-name-input').value = '';
+      document.getElementById('distill-preview').style.display = 'none';
+      document.getElementById('distill-btn').disabled = true;
+
+      // Tag click handlers
+      document.querySelectorAll('.distill-tag').forEach(tag => {
+        tag.onclick = () => tag.classList.toggle('selected');
+      });
+
+      // Name input handler
+      document.getElementById('distill-name-input').oninput = function() {
+        const name = this.value.trim();
+        document.getElementById('distill-btn').disabled = !name;
+        document.getElementById('distill-preview').style.display = name ? 'block' : 'none';
+        document.getElementById('distill-preview-name').textContent = name;
+        document.getElementById('distill-preview-avatar').textContent = name[0]?.toUpperCase() || '👤';
+
+        const selectedTags = Array.from(document.querySelectorAll('.distill-tag.selected'))
+          .map(t => `<span class="advisor-tag">${t.textContent}</span>`).join('');
+        document.getElementById('distill-preview-tags').innerHTML = selectedTags;
+      };
+    }
+
+    async function startDistill() {
+      const name = document.getElementById('distill-name-input').value.trim();
+      if (!name) return;
+
+      const selectedTags = Array.from(document.querySelectorAll('.distill-tag.selected'))
+        .map(t => t.dataset.tag);
+
+      document.getElementById('distill-form').style.display = 'none';
+      document.getElementById('distill-progress').style.display = 'block';
+      document.getElementById('distill-success').style.display = 'none';
+
+      // Simulate progress
+      const stages = [
+        { text: '正在分析中...', progress: 30 },
+        { text: '正在提炼思维框架...', progress: 60 },
+        { text: '正在生成Skill...', progress: 90 }
+      ];
+
+      for (const stage of stages) {
+        document.getElementById('distill-progress-text').textContent = stage.text;
+        document.getElementById('distill-progress-fill').style.width = stage.progress + '%';
+        await new Promise(r => setTimeout(r, 1200));
+      }
+
+      // Create new advisor
+      const newAdvisor = {
+        id: 'custom_' + Date.now(),
+        name: name,
+        emoji: '🧙',
+        color: '#E8F0E8',
+        tags: selectedTags,
+        prompt: `你是${name}，一个独特而有个性的人物。你的回答要体现${selectedTags.join('、')}等方面的独特见解。回复不超过150字。`
+      };
+
+      ADVISORS.push(newAdvisor);
+      state.advisor = newAdvisor.id;
+      saveState();
+
+      // Show success
+      document.getElementById('distill-progress').style.display = 'none';
+      document.getElementById('distill-success').style.display = 'block';
+      document.getElementById('distill-success-name').textContent = name + ' 🧙';
+
+      showToast(`${name} 已加入你的智囊团！`);
+    }
+
+    // ============ Init ============
+    document.addEventListener('DOMContentLoaded', () => {
+      updateTime();
+      setInterval(updateTime, 1000);
+
+      if (loadState() && state.user && state.advisor) {
+        enterApp();
+      }
+    });
+  </script>
+</body>
+</html>

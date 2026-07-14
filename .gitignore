@@ -1,2 +1,8 @@
 xindao/
 ~/
+.next
+node_modules/
+data/db.json
+*.log
+.env
+.DS_Store
