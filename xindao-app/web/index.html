@@ -1638,6 +1638,7 @@
     // ============ State ============
     let state = {
       user: null,
+      userId: null,  // 后端用户ID
       advisor: null,
       messages: [],
       actions: [],
@@ -1778,10 +1779,74 @@
     }
 
     function finishSetup() {
-      state.actions = [...SAMPLE_ACTIONS];
-      state.streak = 3;
-      saveState();
-      goToStep(3);
+      // 异步注册用户
+      registerUser().then(() => {
+        state.actions = [...SAMPLE_ACTIONS];
+        state.streak = 3;
+        saveState();
+        goToStep(3);
+      });
+    }
+
+    // 注册用户到后端
+    async function registerUser() {
+      const serverUrl = localStorage.getItem('xindao_server_url') || 'http://localhost:3001';
+      const deviceId = localStorage.getItem('xindao_device_id');
+
+      try {
+        const response = await fetch(`${serverUrl}/api/user/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            deviceId: deviceId,
+            nickname: state.user?.nickname,
+            bio: state.user?.bio
+          })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          state.userId = data.user.id;
+          state.user = {
+            ...state.user,
+            id: data.user.id,
+            nickname: data.user.nickname,
+            bio: data.user.bio
+          };
+          // 保存设备ID
+          localStorage.setItem('xindao_device_id', data.user.id);
+        }
+      } catch (error) {
+        console.error('注册用户失败:', error);
+        // 继续使用本地存储，不阻塞流程
+      }
+    }
+
+    // 初始化时检查用户状态
+    async function initUser() {
+      const deviceId = localStorage.getItem('xindao_device_id');
+      if (deviceId) {
+        const serverUrl = localStorage.getItem('xindao_server_url') || 'http://localhost:3001';
+        try {
+          const response = await fetch(`${serverUrl}/api/user/${deviceId}`);
+          if (response.ok) {
+            const data = await response.json();
+            state.userId = data.user.id;
+            state.user = {
+              ...state.user,
+              id: data.user.id,
+              nickname: data.user.nickname,
+              bio: data.user.bio
+            };
+          }
+        } catch (error) {
+          console.log('后端不可用，使用本地存储');
+        }
+      } else {
+        // 生成新的设备ID
+        const newDeviceId = 'dev_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+        localStorage.setItem('xindao_device_id', newDeviceId);
+      }
     }
 
     function enterApp() {
@@ -1845,8 +1910,8 @@
               <span class="action-card-title">今日行动</span>
               <span class="action-card-badge">新鲜生成</span>
             </div>
-            ${state.latestActions.map((a, i) => `
-              <div class="action-item ${a.done ? 'completed' : ''}" onclick="toggleAction(${i})">
+            ${state.latestActions.map((a) => `
+              <div class="action-item ${a.done ? 'completed' : ''}" onclick="toggleAction('${a.id}')">
                 <div class="action-check ${a.done ? 'done' : ''}">
                   ${a.done ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFF" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>' : ''}
                 </div>
@@ -2114,13 +2179,70 @@
       if (e.key === 'Enter') sendMessage();
     }
 
-    function toggleAction(index) {
-      if (state.latestActions && state.latestActions[index]) {
-        state.latestActions[index].done = !state.latestActions[index].done;
+    // 切换行动完成状态
+    function toggleAction(actionId) {
+      // 在 latestActions 中查找
+      let action = state.latestActions?.find(a => a.id === actionId);
+      if (!action) {
+        // 在所有 actions 中查找
+        action = state.actions?.find(a => a.id === actionId);
+      }
+
+      if (action) {
+        action.done = !action.done;
+
+        // 如果完成，更新连续天数
+        if (action.done && !action.completedAt) {
+          action.completedAt = new Date().toISOString();
+          updateStreak();
+        }
+
         updateStats();
         saveState();
         renderChat();
-        if (state.latestActions[index].done) showToast('任务完成！🎉');
+        renderProgress();
+
+        if (action.done) showToast('任务完成！🎉');
+      }
+    }
+
+    // 更新连续打卡天数
+    function updateStreak() {
+      const lastDoneDate = localStorage.getItem('xindao_last_done_date');
+      const today = new Date().toDateString();
+      const yesterday = new Date(Date.now() - 86400000).toDateString();
+
+      if (lastDoneDate === today) {
+        // 今天已经完成过，不增加
+      } else if (lastDoneDate === yesterday) {
+        // 昨天完成过，连续+1
+        state.streak = (state.streak || 0) + 1;
+      } else if (!lastDoneDate) {
+        // 第一次完成
+        state.streak = 1;
+      } else {
+        // 中断了，重新开始
+        state.streak = 1;
+      }
+
+      localStorage.setItem('xindao_last_done_date', today);
+      localStorage.setItem('xindao_streak', state.streak);
+    }
+
+    // 初始化连续天数
+    function initStreak() {
+      const lastDoneDate = localStorage.getItem('xindao_last_done_date');
+      const today = new Date().toDateString();
+      const yesterday = new Date(Date.now() - 86400000).toDateString();
+
+      if (lastDoneDate === yesterday) {
+        // 昨天完成了，今天还没完成，保持连续但显示0
+        state.streak = parseInt(localStorage.getItem('xindao_streak') || '0');
+      } else if (lastDoneDate === today) {
+        state.streak = parseInt(localStorage.getItem('xindao_streak') || '1');
+      } else {
+        // 新的一天或中断了
+        state.streak = 0;
       }
     }
 
@@ -2324,9 +2446,13 @@
     }
 
     // ============ Init ============
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       updateTime();
       setInterval(updateTime, 1000);
+
+      // 初始化用户（非阻塞）
+      initUser();
+      initStreak();
 
       if (loadState() && state.user && state.advisor) {
         enterApp();

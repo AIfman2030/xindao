@@ -413,6 +413,92 @@ app.post('/api/generate-actions', async (req, res) => {
   res.json({ actions: generateMockActions(message, advisorId), source: 'mock' });
 });
 
+// 简单用户存储（内存中，开发阶段）
+// 生产环境应使用数据库
+const users = new Map();
+
+// 生成设备ID
+function generateDeviceId() {
+  return 'dev_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+}
+
+// 用户注册/登录
+app.post('/api/user/register', (req, res) => {
+  const { deviceId, nickname, bio } = req.body;
+
+  let user;
+
+  if (deviceId && users.has(deviceId)) {
+    // 已有用户，更新信息
+    user = users.get(deviceId);
+    if (nickname) user.nickname = nickname;
+    if (bio !== undefined) user.bio = bio;
+    user.lastActiveAt = new Date().toISOString();
+  } else {
+    // 新用户
+    user = {
+      id: deviceId || generateDeviceId(),
+      nickname: nickname || '匿名用户',
+      bio: bio || '',
+      createdAt: new Date().toISOString(),
+      lastActiveAt: new Date().toISOString(),
+      selectedAdvisor: 'naval',
+      conversationCount: 0,
+      actionStats: {
+        total: 0,
+        completed: 0
+      }
+    };
+  }
+
+  users.set(user.id, user);
+  res.json({ user });
+});
+
+// 获取用户信息
+app.get('/api/user/:id', (req, res) => {
+  const user = users.get(req.params.id);
+  if (!user) {
+    return res.status(404).json({ error: '用户不存在' });
+  }
+  res.json({ user });
+});
+
+// 更新用户信息
+app.put('/api/user/:id', (req, res) => {
+  const user = users.get(req.params.id);
+  if (!user) {
+    return res.status(404).json({ error: '用户不存在' });
+  }
+
+  const { nickname, bio, selectedAdvisor } = req.body;
+  if (nickname) user.nickname = nickname;
+  if (bio !== undefined) user.bio = bio;
+  if (selectedAdvisor) user.selectedAdvisor = selectedAdvisor;
+  user.updatedAt = new Date().toISOString();
+
+  res.json({ user });
+});
+
+// 更新用户对话统计
+app.post('/api/user/:id/stats', (req, res) => {
+  const user = users.get(req.params.id);
+  if (!user) {
+    return res.status(404).json({ error: '用户不存在' });
+  }
+
+  const { actionCompleted, conversationAdded } = req.body;
+
+  if (actionCompleted) {
+    user.actionStats.completed++;
+    user.actionStats.total++;
+  } else if (conversationAdded) {
+    user.conversationCount++;
+  }
+
+  res.json({ user });
+});
+
 // 获取智者列表
 app.get('/api/advisors', (req, res) => {
   const advisorList = Object.values(ADVISORS).map(a => ({
