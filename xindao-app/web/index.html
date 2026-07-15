@@ -2192,12 +2192,19 @@
       }
 
       if (action) {
+        const wasDone = action.done;
         action.done = !action.done;
 
         // 如果完成，更新连续天数
         if (action.done && !action.completedAt) {
           action.completedAt = new Date().toISOString();
           updateStreak();
+
+          // 发送完成通知
+          sendNotification('✅ 任务完成', action.text, '🎉');
+
+          // 显示激励
+          showAchievement激励(action.text);
         }
 
         updateStats();
@@ -2207,6 +2214,80 @@
 
         if (action.done) showToast('任务完成！🎉');
       }
+
+    // ============ Achievement & Motivation ============
+
+    // 显示成就激励
+    function showAchievement激励(actionText) {
+      const streak = state.streak || 0;
+      let message = '';
+      let emoji = '🎉';
+
+      // 根据连续天数显示不同激励
+      if (streak === 1) {
+        message = '开始就是成功！继续加油 💪';
+        emoji = '🌱';
+      } else if (streak === 3) {
+        message = '3天连续！小有成就 🔥';
+        emoji = '🔥';
+      } else if (streak === 7) {
+        message = '7天连续！习惯养成中 ⭐';
+        emoji = '⭐';
+      } else if (streak === 30) {
+        message = '30天连续！真正的大师 👑';
+        emoji = '👑';
+      } else if (streak % 10 === 0 && streak > 0) {
+        message = `${streak}天连续！不可思议 🏆`;
+        emoji = '🏆';
+      } else {
+        message = `${streak}天连续！保持这个节奏 🚀`;
+      }
+
+      // 获取当前智者的祝贺
+      const advisor = ADVISORS.find(a => a.id === state.advisor);
+      const advisorEmoji = advisor?.emoji || '🌊';
+
+      showToast(`${advisorEmoji} ${message}`);
+
+      // 显示徽章解锁提示
+      checkBadgeUnlock(streak);
+    }
+
+    // 检查徽章解锁
+    function checkBadgeUnlock(streak) {
+      const badges = JSON.parse(localStorage.getItem('xindao_badges') || '{}');
+      const now = new Date().toISOString();
+
+      const badgeDefs = [
+        { id: 'streak_3', name: '3天连续', requirement: 3, emoji: '🔥' },
+        { id: 'streak_7', name: '周冠军', requirement: 7, emoji: '⭐' },
+        { id: 'streak_30', name: '月度大师', requirement: 30, emoji: '👑' }
+      ];
+
+      for (const badge of badgeDefs) {
+        if (streak >= badge.requirement && !badges[badge.id]) {
+          badges[badge.id] = { unlockedAt: now };
+          localStorage.setItem('xindao_badges', JSON.stringify(badges));
+          showToast(`🎖️ 徽章解锁：${badge.emoji} ${badge.name}`);
+        }
+      }
+    }
+
+    // 获取用户徽章
+    function getUserBadges() {
+      const badges = JSON.parse(localStorage.getItem('xindao_badges') || '{}');
+      const badgeDefs = [
+        { id: 'streak_3', name: '3天连续', emoji: '🔥', desc: '连续打卡3天' },
+        { id: 'streak_7', name: '周冠军', emoji: '⭐', desc: '连续打卡7天' },
+        { id: 'streak_30', name: '月度大师', emoji: '👑', desc: '连续打卡30天' }
+      ];
+
+      return badgeDefs.map(badge => ({
+        ...badge,
+        unlocked: !!badges[badge.id],
+        unlockedAt: badges[badge.id]?.unlockedAt
+      }));
+    }
     }
 
     // 更新连续打卡天数
@@ -2289,6 +2370,132 @@
       const now = new Date();
       document.getElementById('week-label').textContent =
         `${now.getMonth() + 1}月第${Math.ceil(now.getDate() / 7)}周`;
+    }
+
+    // ============ Notifications ============
+
+    // 通知权限状态
+    let notificationPermission = 'default';
+
+    // 初始化通知
+    async function initNotifications() {
+      if ('Notification' in window) {
+        notificationPermission = Notification.permission;
+        if (notificationPermission === 'default') {
+          // 可以在这里提示用户开启通知
+        }
+      }
+    }
+
+    // 请求通知权限
+    async function requestNotificationPermission() {
+      if (!('Notification' in window)) {
+        showToast('您的浏览器不支持通知功能');
+        return false;
+      }
+
+      if (notificationPermission === 'granted') {
+        return true;
+      }
+
+      const permission = await Notification.requestPermission();
+      notificationPermission = permission;
+
+      if (permission === 'granted') {
+        showToast('通知已开启 ✨');
+        return true;
+      } else {
+        showToast('通知权限被拒绝');
+        return false;
+      }
+    }
+
+    // 发送本地通知
+    function sendNotification(title, body, icon = '🎯') {
+      if (notificationPermission !== 'granted') {
+        return;
+      }
+
+      const notification = new Notification(title, {
+        body: body,
+        icon: icon,
+        tag: 'xindao-action',
+        requireInteraction: false
+      });
+
+      notification.onclick = () => {
+        window.focus();
+        notification.close();
+        // 跳转到聊天页面查看行动卡
+        goToScreen('screen-chat');
+      };
+
+      // 5秒后自动关闭
+      setTimeout(() => notification.close(), 5000);
+    }
+
+    // 设置行动提醒
+    function scheduleActionReminder(actionText, time) {
+      // 解析时间
+      const now = new Date();
+      const [hours, minutes] = time.split(':').map(Number);
+
+      let reminderTime = new Date();
+      reminderTime.setHours(hours, minutes, 0, 0);
+
+      // 如果时间已过，设置到明天
+      if (reminderTime <= now) {
+        reminderTime.setDate(reminderTime.getDate() + 1);
+      }
+
+      const delay = reminderTime.getTime() - now.getTime();
+
+      // 保存到 localStorage
+      const reminders = JSON.parse(localStorage.getItem('xindao_reminders') || '[]');
+      reminders.push({
+        text: actionText,
+        time: time,
+        scheduledAt: reminderTime.getTime()
+      });
+      localStorage.setItem('xindao_reminders', JSON.stringify(reminders));
+
+      // 设置定时器
+      setTimeout(() => {
+        sendNotification('🎯 行动提醒', actionText);
+        // 移除已触发的提醒
+        removeReminder(actionText, time);
+      }, delay);
+    }
+
+    // 移除已触发的提醒
+    function removeReminder(text, time) {
+      const reminders = JSON.parse(localStorage.getItem('xindao_reminders') || '[]');
+      const filtered = reminders.filter(r => !(r.text === text && r.time === time));
+      localStorage.setItem('xindao_reminders', JSON.stringify(filtered));
+    }
+
+    // 初始化时恢复提醒
+    function restoreReminders() {
+      const reminders = JSON.parse(localStorage.getItem('xindao_reminders') || '[]');
+      const now = Date.now();
+
+      reminders.forEach(reminder => {
+        if (reminder.scheduledAt > now) {
+          const delay = reminder.scheduledAt - now;
+          setTimeout(() => {
+            sendNotification('🎯 行动提醒', reminder.text);
+            removeReminder(reminder.text, reminder.time);
+          }, delay);
+        }
+      });
+    }
+
+    // 在行动完成时设置提醒
+    function onActionCompleted(actionText, actionTime) {
+      // 如果有设置时间提醒
+      if (actionTime && actionTime !== '今天') {
+        scheduleActionReminder(actionText, actionTime);
+      }
     }
 
     // ============ Settings ============
@@ -2547,6 +2754,10 @@
     document.addEventListener('DOMContentLoaded', async () => {
       updateTime();
       setInterval(updateTime, 1000);
+
+      // 初始化通知
+      initNotifications();
+      restoreReminders();
 
       // 初始化用户（非阻塞）
       initUser();
