@@ -1852,6 +1852,9 @@
     function enterApp() {
       const advisor = ADVISORS.find(a => a.id === state.advisor);
 
+      // 加载当前智者的对话历史
+      state.messages = loadAdvisorMessages(state.advisor);
+
       // Update chat header
       document.getElementById('chat-avatar').style.background = advisor?.color || '#FFE4D6';
       document.getElementById('chat-avatar').textContent = advisor?.emoji || '🌊';
@@ -2325,9 +2328,21 @@
     }
 
     function switchAdvisor(id) {
+      const oldAdvisorId = state.advisor;
+
+      // 保存当前智者的对话历史
+      if (oldAdvisorId && state.messages.length > 0) {
+        saveAdvisorMessages(oldAdvisorId);
+      }
+
+      // 切换智者
       state.advisor = id;
+      state.messages = loadAdvisorMessages(id); // 加载新智者的对话历史
+      state.latestActions = []; // 清空行动卡（新智者的行动卡会重新生成）
+
       saveState();
       renderAdvisorSwitch();
+      renderChat(); // 重新渲染聊天（清空或加载历史）
 
       const advisor = ADVISORS.find(a => a.id === id);
       document.getElementById('current-advisor').textContent = advisor?.name || '-';
@@ -2337,7 +2352,38 @@
       document.getElementById('chat-avatar').textContent = advisor?.emoji || '🌊';
       document.getElementById('chat-advisor-name').textContent = '@' + (advisor?.name || '智者');
 
+      // Update welcome text with new advisor
+      if (state.messages.length === 0) {
+        document.getElementById('welcome-text').textContent =
+          `Hi ${state.user?.nickname || ''}，你的专属智者 ${advisor?.name || '智者'} 已就位。无论生活、工作还是感情上的困惑，都可以和他聊聊。`;
+      }
+
       showToast(`已切换到 ${advisor?.name}`);
+    }
+
+    // 保存指定智者的对话历史
+    function saveAdvisorMessages(advisorId) {
+      const key = `xindao_messages_${advisorId}`;
+      localStorage.setItem(key, JSON.stringify(state.messages));
+    }
+
+    // 加载指定智者的对话历史
+    function loadAdvisorMessages(advisorId) {
+      const key = `xindao_messages_${advisorId}`;
+      const saved = localStorage.getItem(key);
+      return saved ? JSON.parse(saved) : [];
+    }
+
+    // 切换时保存当前对话
+    function saveCurrentAdvisorMessages() {
+      if (state.advisor && state.messages.length > 0) {
+        saveAdvisorMessages(state.advisor);
+      }
+    }
+
+    // 加载指定智者的对话历史
+    function loadCurrentAdvisorMessages(advisorId) {
+      return loadAdvisorMessages(advisorId);
     }
 
     function saveApiKey() {
@@ -2399,6 +2445,24 @@
       };
     }
 
+    // 调用后端蒸馏 API
+    async function callDistillAPI(name, tags) {
+      const apiKey = localStorage.getItem('xindao_api_key') || '';
+      const serverUrl = localStorage.getItem('xindao_server_url') || 'http://localhost:3001';
+
+      const response = await fetch(`${serverUrl}/api/distill`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, tags, apiKey })
+      });
+
+      if (!response.ok) {
+        throw new Error('蒸馏失败');
+      }
+
+      return response.json();
+    }
+
     async function startDistill() {
       const name = document.getElementById('distill-name-input').value.trim();
       if (!name) return;
@@ -2410,7 +2474,41 @@
       document.getElementById('distill-progress').style.display = 'block';
       document.getElementById('distill-success').style.display = 'none';
 
-      // Simulate progress
+      try {
+        // 调用后端 API
+        const data = await callDistillAPI(name, selectedTags);
+        const newAdvisor = data.advisor;
+
+        // 添加到本地 ADVISORS
+        ADVISORS.push({
+          id: newAdvisor.id,
+          name: newAdvisor.name,
+          emoji: newAdvisor.emoji,
+          color: newAdvisor.color,
+          tags: newAdvisor.tags,
+          prompt: `你是${newAdvisor.name}，一个独特而有个性的人物。你的回答要体现${selectedTags.join('、')}等方面的独特见解。回复不超过150字。`
+        });
+
+        // 切换到新智者
+        state.advisor = newAdvisor.id;
+        saveState();
+
+        // Show success
+        document.getElementById('distill-progress').style.display = 'none';
+        document.getElementById('distill-success').style.display = 'block';
+        document.getElementById('distill-success-name').textContent = name + ' ' + newAdvisor.emoji;
+
+        showToast(`${name} 已加入你的智囊团！`);
+
+      } catch (error) {
+        console.error('蒸馏失败:', error);
+        // 回退到本地模拟
+        await simulateDistill(name, selectedTags);
+      }
+    }
+
+    // 本地模拟蒸馏（当后端不可用时）
+    async function simulateDistill(name, selectedTags) {
       const stages = [
         { text: '正在分析中...', progress: 30 },
         { text: '正在提炼思维框架...', progress: 60 },

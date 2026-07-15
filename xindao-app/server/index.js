@@ -499,6 +499,201 @@ app.post('/api/user/:id/stats', (req, res) => {
   res.json({ user });
 });
 
+// 自定义智者存储（用户蒸馏的）
+const customAdvisors = new Map();
+
+// 蒸馏新智者 API
+app.post('/api/distill', async (req, res) => {
+  const { name, tags, userId, apiKey } = req.body;
+
+  if (!name || !name.trim()) {
+    return res.status(400).json({ error: '请输入人名' });
+  }
+
+  // 生成智者ID
+  const advisorId = 'custom_' + Date.now().toString(36);
+
+  // 根据标签选择预设的思维框架
+  const frameworks = getFrameworksForTags(tags || []);
+
+  // 构建 prompt
+  const prompt = buildDistilledPrompt(name, tags, frameworks);
+
+  // 智者配置
+  const advisor = {
+    id: advisorId,
+    name: name.trim(),
+    nameEn: name.trim(),
+    emoji: getEmojiForTags(tags),
+    color: getColorForTags(tags),
+    tags: tags || ['自定义'],
+    prompt: prompt,
+    isCustom: true,
+    status: 'ready',
+    createdBy: userId || 'anonymous',
+    createdAt: new Date().toISOString()
+  };
+
+  // 保存
+  customAdvisors.set(advisorId, advisor);
+
+  // 如果有 AI Key，可以进一步优化 prompt
+  if (apiKey && apiKey.startsWith('sk-')) {
+    try {
+      const optimizedPrompt = await optimizePromptWithAI(name, tags, apiKey);
+      advisor.prompt = optimizedPrompt;
+      customAdvisors.set(advisorId, advisor);
+    } catch (error) {
+      console.error('优化prompt失败:', error);
+    }
+  }
+
+  res.json({
+    advisor: {
+      id: advisor.id,
+      name: advisor.name,
+      emoji: advisor.emoji,
+      color: advisor.color,
+      tags: advisor.tags
+    }
+  });
+});
+
+// 获取用户的自定义智者
+app.get('/api/distill/custom', (req, res) => {
+  const userId = req.query.userId;
+  const customList = Array.from(customAdvisors.values())
+    .filter(a => !userId || a.createdBy === userId || a.createdBy === 'anonymous')
+    .map(a => ({
+      id: a.id,
+      name: a.name,
+      emoji: a.emoji,
+      color: a.color,
+      tags: a.tags
+    }));
+  res.json({ advisors: customList });
+});
+
+// 获取自定义智者的完整配置
+app.get('/api/distill/:id', (req, res) => {
+  const advisor = customAdvisors.get(req.params.id);
+  if (!advisor) {
+    return res.status(404).json({ error: '智者不存在' });
+  }
+  res.json({ advisor });
+});
+
+// 根据标签获取思维框架
+function getFrameworksForTags(tags) {
+  const frameworkMap = {
+    '创业': ['行动胜于完美', '找到PMF', '小步快跑'],
+    '投资': ['长期主义', '风险控制', '逆向思考'],
+    '产品': ['用户价值', '极简设计', '迭代优化'],
+    '学习': ['费曼学习法', '批判思维', '知识体系'],
+    '职场': ['职业规划', '技能积累', '价值创造'],
+    '幸福': ['内心平静', '减少欲望', '感恩实践'],
+    '创新': ['第一性原理', '跨界思维', '大胆尝试'],
+    '领导力': ['愿景驱动', '人才密度', '坦诚透明'],
+    '全球化': ['本地化思维', '文化适应', '规模化路径']
+  };
+
+  const frameworks = [];
+  for (const tag of tags) {
+    if (frameworkMap[tag]) {
+      frameworks.push(...frameworkMap[tag]);
+    }
+  }
+  return [...new Set(frameworks)].slice(0, 6);
+}
+
+// 根据标签生成 prompt
+function buildDistilledPrompt(name, tags, frameworks) {
+  const tagStr = tags?.join('、') || '综合';
+  const frameworkStr = frameworks?.join('、') || '智慧思考';
+
+  return `你是${name}，一个在${tagStr}领域有独特见解的人。
+
+核心特点：
+- 思维框架：${frameworkStr}
+- 说话风格：简洁有力，直击要害
+- 回答特点：结合实际经验，给出可执行的建议
+
+原则：
+- 用「我」而非「${name}会认为...」
+- 回复不超过150字
+- 善用比喻和具体例子
+- 强调行动和选择
+
+你的任务是帮助用户思考${tagStr}相关的问题，提供有深度、有实用价值的建议。`;
+}
+
+// 根据标签选择 emoji
+function getEmojiForTags(tags) {
+  const emojiMap = {
+    '创业': '🚀', '投资': '💰', '产品': '💼', '学习': '📚',
+    '职场': '💼', '幸福': '🌸', '创新': '💡', '领导力': '👑',
+    '全球化': '🌍', '设计': '🎨', '技术': '⚡', '内容创作': '🎬'
+  };
+
+  for (const tag of tags || []) {
+    if (emojiMap[tag]) return emojiMap[tag];
+  }
+  return '🧙';
+}
+
+// 根据标签选择颜色
+function getColorForTags(tags) {
+  const colorMap = {
+    '创业': '#FFE4D6', '投资': '#D6E8F0', '产品': '#E8F0D6',
+    '学习': '#E8DFF0', '职场': '#D6E8F0', '幸福': '#F0E8D6',
+    '创新': '#D6FFE8', '领导力': '#E8D6F0', '全球化': '#D6E8FF',
+    '设计': '#FFE8F0', '技术': '#E8FFFF', '内容创作': '#F0EBD6'
+  };
+
+  for (const tag of tags || []) {
+    if (colorMap[tag]) return colorMap[tag];
+  }
+  return '#E8F0E8';
+}
+
+// 用 AI 优化 prompt
+async function optimizePromptWithAI(name, tags, apiKey) {
+  const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`
+    },
+    body: JSON.stringify({
+      model: 'gpt-4o-mini',
+      messages: [
+        {
+          role: 'system',
+          content: `你是一个角色蒸馏专家。请根据以下信息，为"${name}"生成一个AI角色prompt。
+
+背景信息：
+- 领域：${tags?.join('、') || '综合'}
+- 思维框架：${getFrameworksForTags(tags).join('、')}
+
+要求：
+1. 直接以该人物的口吻回应，用"我"
+2. 体现该人物独特的思维方式和表达风格
+3. 回复不超过150字
+4. 善用比喻和具体例子
+5. 强调行动和选择
+
+直接输出prompt，不需要解释。`
+        }
+      ],
+      max_tokens: 300,
+      temperature: 0.8
+    })
+  });
+
+  const data = await response.json();
+  return data.choices[0].message.content;
+}
+
 // 获取智者列表
 app.get('/api/advisors', (req, res) => {
   const advisorList = Object.values(ADVISORS).map(a => ({
