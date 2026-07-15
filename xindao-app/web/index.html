@@ -1586,7 +1586,23 @@
           </div>
 
           <div class="settings-card">
-            <div class="settings-card-title">📊 当前状态</div>
+            <div class="settings-card-title">📊 数据统计</div>
+            <div class="settings-item">
+              <span class="settings-item-label">今日消息</span>
+              <span class="settings-item-value" id="stat-today-messages">0</span>
+            </div>
+            <div class="settings-item">
+              <span class="settings-item-label">今日完成行动</span>
+              <span class="settings-item-value" id="stat-today-actions">0</span>
+            </div>
+            <div class="settings-item">
+              <span class="settings-item-label">连续打卡</span>
+              <span class="settings-item-value" id="stat-streak">0天</span>
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <div class="settings-card-title">📋 用户状态</div>
             <div class="settings-item">
               <span class="settings-item-label">用户</span>
               <span class="settings-item-value" id="current-nickname">-</span>
@@ -1709,6 +1725,7 @@
     function initRegister() {
       if (loadState() && state.user && state.advisor) {
         enterApp();
+        trackAppOpened();
         return;
       }
 
@@ -1946,6 +1963,9 @@
       });
       input.value = '';
       renderChat();
+
+      // 埋点：发送消息
+      trackMessageSent(text.length);
 
       // Show typing indicator
       const container = document.getElementById('chat-messages');
@@ -2205,6 +2225,9 @@
 
           // 显示激励
           showAchievement激励(action.text);
+
+          // 埋点：行动完成
+          trackActionCompleted(action.text);
         }
 
         updateStats();
@@ -2517,6 +2540,12 @@
       document.getElementById('current-nickname').textContent = state.user?.nickname || '-';
       document.getElementById('current-advisor').textContent = advisor?.name || '-';
       document.getElementById('message-count').textContent = state.messages.filter(m => m.role === 'user').length;
+
+      // 更新数据统计
+      const stats = Analytics.getStats();
+      document.getElementById('stat-today-messages').textContent = stats.conversations;
+      document.getElementById('stat-today-actions').textContent = stats.actionsCompleted;
+      document.getElementById('stat-streak').textContent = (state.streak || 0) + '天';
     }
 
     function renderAdvisorSwitch() {
@@ -2564,6 +2593,9 @@
         document.getElementById('welcome-text').textContent =
           `Hi ${state.user?.nickname || ''}，你的专属智者 ${advisor?.name || '智者'} 已就位。无论生活、工作还是感情上的困惑，都可以和他聊聊。`;
       }
+
+      // 埋点：切换智者
+      trackAdvisorSwitched(id);
 
       showToast(`已切换到 ${advisor?.name}`);
     }
@@ -2705,6 +2737,9 @@
         document.getElementById('distill-success').style.display = 'block';
         document.getElementById('distill-success-name').textContent = name + ' ' + newAdvisor.emoji;
 
+        // 埋点：蒸馏完成
+        trackDistillCompleted(name);
+
         showToast(`${name} 已加入你的智囊团！`);
 
       } catch (error) {
@@ -2748,6 +2783,168 @@
       document.getElementById('distill-success-name').textContent = name + ' 🧙';
 
       showToast(`${name} 已加入你的智囊团！`);
+    }
+
+    // ============ Analytics ============
+
+    // 埋点事件
+    const Analytics = {
+      // 事件存储
+      events: JSON.parse(localStorage.getItem('xindao_analytics') || '[]'),
+
+      // 记录事件
+      track(eventName, properties = {}) {
+        const event = {
+          name: eventName,
+          properties: properties,
+          timestamp: new Date().toISOString(),
+          sessionId: localStorage.getItem('xindao_session_id') || this.initSession()
+        };
+
+        this.events.push(event);
+
+        // 只保留最近500条
+        if (this.events.length > 500) {
+          this.events = this.events.slice(-500);
+        }
+
+        localStorage.setItem('xindao_analytics', JSON.stringify(this.events));
+      },
+
+      // 初始化会话
+      initSession() {
+        const sessionId = 'sess_' + Date.now().toString(36);
+        localStorage.setItem('xindao_session_id', sessionId);
+        return sessionId;
+      },
+
+      // 获取统计数据
+      getStats() {
+        const today = new Date().toDateString();
+        const todayEvents = this.events.filter(e =>
+          new Date(e.timestamp).toDateString() === today
+        );
+
+        return {
+          totalEvents: this.events.length,
+          todayEvents: todayEvents.length,
+          conversations: todayEvents.filter(e => e.name === 'message_sent').length,
+          actionsCompleted: todayEvents.filter(e => e.name === 'action_completed').length,
+          advisorsUsed: [...new Set(todayEvents.filter(e => e.name === 'advisor_switched').map(e => e.properties.advisorId))].length
+        };
+      },
+
+      // 获取漏斗数据
+      getFunnel() {
+        const all = this.events;
+        return {
+          appOpened: all.filter(e => e.name === 'app_opened').length,
+          registered: all.filter(e => e.name === 'user_registered').length,
+          firstMessage: all.filter(e => e.name === 'first_message').length,
+          firstAction: all.filter(e => e.name === 'first_action').length,
+          firstDistill: all.filter(e => e.name === 'first_distill').length
+        };
+      }
+    };
+
+    // 快捷埋点方法
+    function trackAppOpened() {
+      Analytics.track('app_opened', {
+        userId: state.userId,
+        advisorId: state.advisor
+      });
+    }
+
+    function trackMessageSent(messageLength) {
+      Analytics.track('message_sent', {
+        userId: state.userId,
+        advisorId: state.advisor,
+        messageLength: messageLength
+      });
+    }
+
+    function trackActionCompleted(actionText) {
+      Analytics.track('action_completed', {
+        userId: state.userId,
+        advisorId: state.advisor,
+        streak: state.streak
+      });
+    }
+
+    function trackAdvisorSwitched(newAdvisorId) {
+      Analytics.track('advisor_switched', {
+        userId: state.userId,
+        from: state.advisor,
+        to: newAdvisorId
+      });
+    }
+
+    function trackDistillCompleted(advisorName) {
+      Analytics.track('distill_completed', {
+        userId: state.userId,
+        advisorName: advisorName
+      });
+    }
+
+    function trackUserRegistered() {
+      Analytics.track('user_registered', {
+        userId: state.userId
+      });
+    }
+
+    // ============ A/B Testing ============
+
+    // 简单的 A/B 测试框架
+    const ABTest = {
+      // 实验配置
+      experiments: JSON.parse(localStorage.getItem('xindao_ab_experiments') || '{}'),
+
+      // 用户所属组别
+      getVariant(experimentId, variants = ['A', 'B']) {
+        // 检查是否已有分组
+        if (this.experiments[experimentId]) {
+          return this.experiments[experimentId];
+        }
+
+        // 随机分配
+        const variant = variants[Math.floor(Math.random() * variants.length)];
+        this.experiments[experimentId] = variant;
+        localStorage.setItem('xindao_ab_experiments', JSON.stringify(this.experiments));
+
+        return variant;
+      },
+
+      // 记录实验结果
+      track(experimentId, metric, value) {
+        Analytics.track('ab_' + metric, {
+          experimentId: experimentId,
+          variant: this.experiments[experimentId],
+          value: value
+        });
+      },
+
+      // 获取实验状态
+      getExperiment(experimentId) {
+        return {
+          variant: this.experiments[experimentId] || 'unknown',
+          isInGroup: (variant) => this.experiments[experimentId] === variant
+        };
+      }
+    };
+
+    // 智者 prompt 的 A/B 测试
+    function getAdvisorPromptForAB(advisorId) {
+      const variant = ABTest.getVariant('advisor_prompt_' + advisorId, ['control', 'enhanced']);
+
+      // 基础 prompt
+      const basePrompt = ADVISORS.find(a => a.id === advisorId)?.prompt || '';
+
+      if (variant === 'enhanced') {
+        // 增强版：更强调行动导向
+        return basePrompt + '\n\n重要：每次回复后，请给出1-2个具体的行动建议。';
+      }
+
+      return basePrompt;
     }
 
     // ============ Init ============
