@@ -3,7 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#FF9A76">
+  <meta name="description" content="心岛 - AI陪伴社交App，通过蒸馏各领域智者的思维框架，为用户提供可落地的行动建议">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="心岛">
   <title>心岛 - 释放你的焦虑与孤独</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%23FF9A76' width='180' height='180' rx='30'/><text x='90' y='125' font-size='90' text-anchor='middle'>🏝️</text></svg>">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -2947,10 +2954,68 @@
       return basePrompt;
     }
 
+    // ============ PWA / Service Worker ============
+
+    // 注册 Service Worker
+    function registerServiceWorker() {
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('sw.js')
+            .then((registration) => {
+              console.log('[App] SW 注册成功:', registration.scope);
+            })
+            .catch((error) => {
+              console.log('[App] SW 注册失败:', error);
+            });
+        });
+      }
+    }
+
+    // 检查 PWA 安装状态
+    function checkPWAInstallability() {
+      let deferredPrompt;
+      const installBtn = document.getElementById('pwa-install-btn');
+
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        console.log('[App] 可以安装 PWA');
+
+        // 显示安装提示（可选）
+        if (installBtn) {
+          installBtn.style.display = 'block';
+        }
+      });
+
+      window.addEventListener('appinstalled', () => {
+        console.log('[App] PWA 已安装');
+        deferredPrompt = null;
+        if (installBtn) {
+          installBtn.style.display = 'none';
+        }
+      });
+    }
+
+    // 安装 PWA
+    async function installPWA() {
+      const deferredPrompt = window.deferredPrompt;
+
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log('[App] 安装结果:', outcome);
+        window.deferredPrompt = null;
+      }
+    }
+
     // ============ Init ============
     document.addEventListener('DOMContentLoaded', async () => {
       updateTime();
       setInterval(updateTime, 1000);
+
+      // 注册 Service Worker
+      registerServiceWorker();
+      checkPWAInstallability();
 
       // 初始化通知
       initNotifications();

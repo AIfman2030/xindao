@@ -1,48 +1,26 @@
-# 心岛 App - 小程序开发包
+# 心岛 App - 微信小程序
 
-> 快速验证版本 MVP v1.0
+> ⚠️ **重要更新**：心岛 App 已完成 Web 版本开发（Week 1-8），小程序是可选的后续平台。
 
-## 目录结构
+## 状态
 
-```
-mini-program/
-├── app.js              # 全局入口
-├── app.json            # 全局配置
-├── app.wxss            # 全局样式
-├── pages/
-│   ├── splash/         # 启动页
-│   ├── onboarding/     # 引导页
-│   ├── auth/           # 登录注册
-│   ├── choose-advisor/ # 选择智者
-│   ├── chat/           # 聊天页 ⭐
-│   ├── today/          # 今日页
-│   ├── progress/       # 进度页
-│   ├── profile/        # 我的页
-│   └── distill/        # 蒸馏页
-├── components/         # 组件
-├── utils/              # 工具
-├── services/           # API服务
-└── assets/             # 静态资源
-```
+- **Web 版本**：✅ 已完成，功能完整
+- **小程序版本**：🔄 开发中（基于原有 MVP 代码）
+
+## 快速开始
+
+1. 下载 [微信开发者工具](https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html)
+2. 导入 `mini-program` 目录
+3. 设置 AppID（使用测试号或正式账号）
+4. 编译运行
 
 ## 已完成页面
 
 | 页面 | 状态 | 说明 |
 |------|------|------|
 | splash | ✅ | 启动页 + 呼吸动画 |
-| chat | ✅ | 聊天界面 + 行动卡 + 语音 |
+| chat | ✅ | 聊天界面 + 行动卡 |
 | progress | ✅ | 进度追踪（圆环 + 连续天数）|
-
-## 待完成页面
-
-| 页面 | 说明 |
-|------|------|
-| onboarding | 3页引导 |
-| auth | 昵称注册 |
-| choose-advisor | 选择智者卡片 |
-| today | 今日任务 |
-| profile | 个人中心 |
-| distill | 蒸馏新人 |
 
 ## 设计规范
 
@@ -56,21 +34,54 @@ mini-program/
 边框: #F5EDE6
 ```
 
-## 运行方式
+## 小程序适配指南
 
-1. 下载微信开发者工具
-2. 导入 `mini-program` 目录
-3. 设置 AppID（测试号即可）
-4. 编译运行
+### 核心 API 映射
 
-## 下一步
+| Web 功能 | 小程序 API |
+|---------|-----------|
+| 设备ID | `wx.login()` 获取 OpenID |
+| 浏览器通知 | `wx.requestSubscribeMessage()` |
+| API 请求 | `wx.request()` |
+| 存储 | `wx.getStorageSync()` |
 
-1. 完成剩余页面
-2. 对接后端API
-3. 集成Skill引擎
-4. 提交审核
+### 需要适配的文件
 
----
+1. **认证**：改用 `wx.login()` 获取用户标识
+2. **通知**：使用 `wx.requestSubscribeMessage()` 替代浏览器通知
+3. **请求**：将 `fetch` 改为 `wx.request()`
+4. **样式**：微信特殊的 rpx 单位
 
-**PRD文档**: `PRD.md`
-**设计稿**: `design-demos/xindao-app-prototype-v5-complete.html`
+### 示例代码
+
+```javascript
+// 小程序获取用户标识
+wx.login({
+  success: (res) => {
+    if (res.code) {
+      // 发送 code 到后端换取 openid
+    }
+  }
+});
+
+// 小程序订阅消息
+wx.requestSubscribeMessage({
+  tmplIds: ['your_template_id'],
+  success: (res) => {
+    console.log('订阅结果:', res);
+  }
+});
+```
+
+## 后续计划
+
+1. 完善剩余页面（onboarding、profile 等）
+2. 对接 Web 后端 API（`localhost:3001`）
+3. 集成 OpenAI 流式对话
+4. 提交微信审核
+
+## 相关资源
+
+- [Web 版本入口](../web/index.html)
+- [后端服务](../server/README.md)
+- [架构文档](../../ARCHITECTURE.md)
